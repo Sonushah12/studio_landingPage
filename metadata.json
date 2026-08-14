@@ -1,0 +1,6 @@
+{
+  "name": "Merrick Dance & Entertainment Studio",
+  "description": "Premier Dance & Entertainment Studio landing page with interactive class discovery, schedule booking, dance style matcher, fee calculator, and workshop RSVPs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
