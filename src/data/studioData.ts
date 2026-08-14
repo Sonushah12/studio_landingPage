@@ -1,4 +1,104 @@
-import { DanceClass, Instructor, ScheduleSlot, Testimonial, Workshop } from '../types';
+import {
+  StudioFullData,
+  StudioGeneralInfo,
+  HeroConfig,
+  DanceClass,
+  Instructor,
+  ScheduleSlot,
+  Testimonial,
+  Workshop,
+  SpecialService,
+  StudioAmenity,
+  FaqItem,
+  PricingConfig,
+} from '../types';
+
+export const DEFAULT_GENERAL_INFO: StudioGeneralInfo = {
+  studioName: 'Merrick Dance & Entertainment Studio',
+  tagline: 'Elevate Your Rhythm & Artistic Expression',
+  subtagline: 'Ahmedabad’s Premier Dance Conservatory & Performing Arts Academy',
+  phone: '+919909843221',
+  phoneDisplay: '+91 99098 43221',
+  whatsapp: '919909843221',
+  whatsappDisplay: '+91 99098 43221',
+  email: 'sonu.shah99098@gmail.com',
+  addressLine1: 'Hanshoura Road, Near Prime Landmark',
+  addressLine2: 'Paldi / Hanshoura Corridor',
+  city: 'Ahmedabad',
+  state: 'Gujarat',
+  pincode: '380007',
+  fullAddress: 'Hanshoura Road, Ahmedabad, Gujarat 380007, India',
+  address: 'Hanshoura Road, Ahmedabad, Gujarat 380007',
+  operatingHoursWeekday: '7:00 AM – 9:30 PM',
+  operatingHoursWeekend: '8:00 AM – 7:00 PM',
+  operatingHoursSunday: '8:00 AM – 7:00 PM',
+  announcementBarText: '🎉 Admissions Open for Monsoon–Autumn Batches! 1st Trial Class is 100% Free.',
+  announcementBarEnabled: true,
+  announcementBarLinkText: 'Book Free Pass',
+  announcementBarLinkUrl: '#schedule',
+  stats: {
+    studentsTrained: '1,200+',
+    yearsOfExcellence: '12+',
+    googleRating: '4.9',
+    reviewsCount: '340+',
+    danceDisciplines: '8+',
+    studentsCount: '1,200+',
+    yearsExp: '12+',
+    choreographersCount: '10+',
+    productionsCount: '45+',
+  },
+  googleMapsUrl: 'https://maps.google.com/?q=Hanshoura+Road+Ahmedabad',
+  instagramUrl: 'https://instagram.com/Sonushah7373',
+  youtubeUrl: 'https://youtube.com',
+  facebookUrl: 'https://facebook.com/Sonushah7373',
+  socialLinks: {
+    instagram: 'Sonushah7373',
+    facebook: 'Sonushah7373',
+    twitter: 'Sonushah7373',
+    youtube: 'MerrickDanceStudio',
+  },
+};
+
+export const DEFAULT_HERO_CONFIG: HeroConfig = {
+  badgeText: 'Hanshoura Road • Ahmedabad’s Premier Dance Academy',
+  mainHeadline1: 'Where Passion',
+  mainHeadlineHighlight: 'Ignites Stage',
+  mainHeadline2: 'Mastery',
+  subDescription: 'Immerse yourself in world-class training led by master choreographers Nitin Oad & Shubham Rajput. From energetic Bollywood & Street Hip-Hop to authentic Salsa, Contemporary, and bespoke Wedding Sangeet.',
+  ctaPrimaryText: 'Book 1st Free Trial Class',
+  ctaSecondaryText: 'Explore Weekly Batches',
+  bannerNotice: '⚡ Limited Free Trial Slots available this week across Studio Alpha & Studio Beta',
+  slides: [
+    {
+      id: 'slide-1',
+      imageUrl: 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1600&q=85',
+      title: 'Bollywood Commercial & High-Energy Fusion',
+      subtitle: 'Master cinematic routines, stage expressions & viral choreo',
+      badge: 'Signature Batch',
+    },
+    {
+      id: 'slide-2',
+      imageUrl: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=1600&q=85',
+      title: 'Urban Hip-Hop, Popping & Street Cyphers',
+      subtitle: 'Break down isolations, musicality, top-rock & floor dynamics',
+      badge: 'Battle Ready',
+    },
+    {
+      id: 'slide-3',
+      imageUrl: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?auto=format&fit=crop&w=1600&q=85',
+      title: 'Sensual Salsa & Bachata Partner Dancing',
+      subtitle: 'No partner needed! Fluid frame connection, turns & musicality',
+      badge: 'Social Ready',
+    },
+    {
+      id: 'slide-4',
+      imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1600&q=85',
+      title: 'Contemporary Flow & Lyrical Storytelling',
+      subtitle: 'Graceful extensions, floor transitions & emotional choreography',
+      badge: 'Artistic Excellence',
+    },
+  ],
+};
 
 export const DANCE_CLASSES: DanceClass[] = [
   {
@@ -8,13 +108,13 @@ export const DANCE_CLASSES: DanceClass[] = [
     categoryLabel: 'Bollywood Fusion',
     tagline: 'High-octane cinematic choreography, lyrical storytelling, and infectious energy.',
     description: 'Master dynamic Bollywood routines blending commercial street jazz, expressive hook steps, and current chartbusters.',
-    fullDescription: 'Our signature Bollywood Commercial & Fusion program is crafted for dance lovers seeking high energy, theatrical expression, and stage-ready confidence. From retro beats to the newest Bollywood viral choreographies, each session sharpens your body coordination, rhythmic ear, and cinematic expressions (abhinaya).',
+    fullDescription: 'Our signature Bollywood Commercial & Fusion program is crafted for dance lovers seeking high energy, theatrical expression, and stage-ready confidence. Led by Shubham Rajput, each session sharpens your body coordination, rhythmic ear, and cinematic expressions (abhinaya).',
     level: 'All Levels',
     ageGroup: 'Age 8+',
     scheduleDays: 'Mon / Wed / Fri',
     timing: '6:00 PM – 7:15 PM & 7:30 PM – 8:45 PM',
-    instructorName: 'Sonu Shah & Shubham Rajput',
-    instructorId: 'sonu-shah',
+    instructorName: 'Shubham Rajput',
+    instructorId: 'shubham-rajput',
     accentColor: '#3D6338',
     lightColor: '#D8E8D4',
     badge: 'Most Popular',
@@ -22,11 +122,12 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Cinematic expressions (Abhinaya) & stage presence',
       'Fluid transitions between folk, lyrical & western beats',
       'Dynamic speed variations, footwork, and signature hook steps',
-      'Full music video style routine mastered every 3 weeks'
+      'Full music video style routine mastered every 3 weeks',
     ],
     prerequisites: 'None! Open to enthusiastic beginners and advanced performers alike.',
     caloriesBurn: '~450 - 600 kcal / session',
-    soundRhythmType: 'bollywood'
+    soundRhythmType: 'bollywood',
+    imageUrl: 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1000&q=80',
   },
   {
     id: 'hiphop-urban',
@@ -49,11 +150,12 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Body isolations, chest pops, wrist rolls & waving mechanics',
       'Top-rock, footwork, freezes, and foundation breaking basics',
       'Musicality breakdown: pocket dancing, syncopation & bass hits',
-      'Monthly studio Cypher battle sessions to build confidence'
+      'Monthly studio Cypher battle sessions to build confidence',
     ],
     prerequisites: 'Comfortable sneakers and loose athletic attire.',
     caloriesBurn: '~500 - 700 kcal / session',
-    soundRhythmType: 'hiphop'
+    soundRhythmType: 'hiphop',
+    imageUrl: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=1000&q=80',
   },
   {
     id: 'latin-salsa-bachata',
@@ -76,11 +178,12 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Fundamental timing: Son Clave, 1-2-3, 5-6-7 step rhythm',
       'Lead & Follow mechanics: frame tension, weight transfers & cues',
       'Cross-body lead variations, inside/outside turns & hammerlocks',
-      'Bachata body waves, sensual isolations & musical accents'
+      'Bachata body waves, sensual isolations & musical accents',
     ],
     prerequisites: 'No partner or prior experience required. Rotational teaching.',
     caloriesBurn: '~400 - 550 kcal / session',
-    soundRhythmType: 'salsa'
+    soundRhythmType: 'salsa',
+    imageUrl: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?auto=format&fit=crop&w=1000&q=80',
   },
   {
     id: 'contemporary-flow',
@@ -89,12 +192,12 @@ export const DANCE_CLASSES: DanceClass[] = [
     categoryLabel: 'Modern Movement',
     tagline: 'Graceful fluidity, floorwork, extension, breath control, and emotional storytelling.',
     description: 'Blend athletic floor transitions, releases, momentum sweeps, and deep expressive improvisation.',
-    fullDescription: 'Contemporary dance is a journey of body awareness, breath, and profound emotional release. Guided by Nitin Oad and Sonu Shah, students develop elongated lines, core strength, soaring leaps, and seamless floor recovery techniques with modern lyrical phrasing.',
+    fullDescription: 'Contemporary dance is a journey of body awareness, breath, and profound emotional release. Guided by Nitin Oad, students develop elongated lines, core strength, soaring leaps, and seamless floor recovery techniques with modern lyrical phrasing.',
     level: 'All Levels',
     ageGroup: 'Age 8+ to Adults',
     scheduleDays: 'Wed / Sat / Sun',
     timing: '7:00 PM – 8:15 PM & Sunday Special 9:30 AM',
-    instructorName: 'Nitin Oad & Sonu Shah',
+    instructorName: 'Nitin Oad',
     instructorId: 'nitin-oad',
     accentColor: '#3D6338',
     lightColor: '#DDE8DA',
@@ -103,11 +206,12 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Dynamic floor sweeps, spirals, shoulder rolls & soft drops',
       'Core stabilization, leg extensions and suspension jumps',
       'Lyrical phrase choreography with emotive musical phrasing',
-      'Improvisation exercises to unlock personal movement vocabulary'
+      'Improvisation exercises to unlock personal movement vocabulary',
     ],
     prerequisites: 'Comfortable stretchable clothing, barefoot or dance socks.',
     caloriesBurn: '~420 - 550 kcal / session',
-    soundRhythmType: 'contemporary'
+    soundRhythmType: 'contemporary',
+    imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1000&q=80',
   },
   {
     id: 'kids-creative-movement',
@@ -121,7 +225,7 @@ export const DANCE_CLASSES: DanceClass[] = [
     ageGroup: 'Age 3 – 8 Years',
     scheduleDays: 'Tue / Thu / Sat',
     timing: '4:00 PM – 5:00 PM (Batch A) & 5:00 PM – 6:00 PM (Batch B)',
-    instructorName: 'Shubham Rajput & Team',
+    instructorName: 'Shubham Rajput',
     instructorId: 'shubham-rajput',
     accentColor: '#7A9E74',
     lightColor: '#E8F0E6',
@@ -130,11 +234,12 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Rhythm clapping games and ear-training on vibrant global beats',
       'Gross motor coordination: skipping, galloping, balancing & leaps',
       'Fun mini-routines set to Disney, animated themes and Bollywood hits',
-      'Mid-term Parent Showcase & Annual Stage Production performance'
+      'Mid-term Parent Showcase & Annual Stage Production performance',
     ],
     prerequisites: 'Just their boundless energy and excitement!',
     caloriesBurn: '~300 kcal / session',
-    soundRhythmType: 'kids'
+    soundRhythmType: 'kids',
+    imageUrl: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1000&q=80',
   },
   {
     id: 'sangeet-wedding-choreography',
@@ -143,13 +248,13 @@ export const DANCE_CLASSES: DanceClass[] = [
     categoryLabel: 'Special Choreography',
     tagline: 'Grand couple first dance, energetic family flashmobs, and seamless audio mixes.',
     description: 'Bespoke choreography packages for couples, families, and corporate galas with video tutorials and home/studio rehearsals.',
-    fullDescription: 'Make your grand celebrations magical! Sonu Shah and the senior choreography team specialize in crafting signature dance sequences tailored to all skill levels. From romantic slow waltzes and Bollywood couple medleys to high-energy 40-person family medleys and custom music mashups.',
+    fullDescription: 'Make your grand celebrations magical! Shubham Rajput and Nitin Oad specialize in crafting signature dance sequences tailored to all skill levels. From romantic slow waltzes and Bollywood couple medleys to high-energy 40-person family medleys and custom music mashups.',
     level: 'Custom for All Ages',
     ageGroup: 'All Age Groups',
     scheduleDays: 'Flexible Custom Timings',
     timing: 'Daily by Appointment (Morning / Afternoon / Evening)',
-    instructorName: 'Sonu Shah & Choreography Team',
-    instructorId: 'sonu-shah',
+    instructorName: 'Shubham Rajput & Nitin Oad',
+    instructorId: 'shubham-rajput',
     accentColor: '#3D6338',
     lightColor: '#E8EAD0',
     badge: 'Bespoke Experience',
@@ -157,36 +262,20 @@ export const DANCE_CLASSES: DanceClass[] = [
       'Custom song mashup and high-definition audio track mixing',
       'Easy-to-learn steps designed for non-dancers & grandparents alike',
       'HD video practice tutorials shared for distant family members',
-      'Rehearsal options at Merrick Studio or your private residence'
+      'Rehearsal options at Merrick Studio or your private residence',
     ],
     prerequisites: 'Choose your favourite songs and let us handle the rest!',
     caloriesBurn: '~400 kcal / session',
-    soundRhythmType: 'bollywood'
-  }
+    soundRhythmType: 'bollywood',
+    imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80',
+  },
 ];
 
 export const INSTRUCTORS: Instructor[] = [
   {
-    id: 'sonu-shah',
-    name: 'Sonu Shah',
-    role: 'Founder, Artistic Director & Lead Choreographer',
-    experience: '14+ Years Experience',
-    avatarText: 'SS',
-    accentColor: '#3D6338',
-    specialties: ['Bollywood Commercial', 'Urban & Hip-Hop Choreography', 'Wedding Sangeet Direction', 'Stage Production'],
-    bio: 'With over 14 years of professional choreography and stage direction across film productions, music videos, and mega stage recitals, Sonu Shah leads Merrick Dance & Entertainment Studio with artistic vision, explosive energy, and dedication to building confident performers.',
-    achievements: [
-      'Directed 50+ mega stage productions & national entertainment events',
-      'Choreographed celebrity music videos and award show routines',
-      'Mentored over 1,200 dancers from first-time beginners to pro stage performers'
-    ],
-    quote: 'Dance is passion made visible. When you own the stage with confidence, the world moves with you.',
-    classesTaught: ['Bollywood Commercial & Fusion', 'Contemporary & Lyrical Flow', 'Wedding Sangeet & Event Masterclass']
-  },
-  {
     id: 'nitin-oad',
     name: 'Nitin Oad',
-    role: 'Senior Faculty & Urban / Contemporary Specialist',
+    role: 'Senior Choreographer & Urban / Contemporary Specialist',
     experience: '10+ Years Experience',
     avatarText: 'NO',
     accentColor: '#5A5854',
@@ -195,35 +284,39 @@ export const INSTRUCTORS: Instructor[] = [
     achievements: [
       'Winner & Finalist in national street dance and cypher battles',
       'Head trainer for competitive crew championship routines',
-      'Specialist in somatic movement, joint conditioning, and acrobatic transitions'
+      'Specialist in somatic movement, joint conditioning, and acrobatic transitions',
     ],
     quote: 'Never hold back on the floor. Isolate every beat, master your gravity, and dance with authentic power.',
-    classesTaught: ['Urban Hip-Hop, Popping & Breaking', 'Contemporary & Lyrical Flow']
+    classesTaught: ['Urban Hip-Hop, Popping & Breaking', 'Contemporary & Lyrical Flow', 'Wedding Sangeet & Event Masterclass'],
+    imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
+    actionPhotoUrl: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'shubham-rajput',
     name: 'Shubham Rajput',
-    role: 'Senior Choreographer & Latin / Foundation Lead',
+    role: 'Senior Choreographer & Latin / Bollywood Lead',
     experience: '9+ Years Experience',
     avatarText: 'SR',
     accentColor: '#7A9E74',
-    specialties: ['Salsa & Bachata Partnering', 'Bollywood Fusion', 'Kids Movement & Little Stars', 'Folk & Garba Fusion'],
-    bio: 'Known for his engaging teaching style, infectious smile, and deep musical intuition, Shubham Rajput makes partner dancing and foundational movement accessible and exciting for dancers of all ages, from toddlers to adults.',
+    specialties: ['Salsa & Bachata Partnering', 'Bollywood Fusion', 'Kids Movement & Little Stars', 'Wedding Choreography'],
+    bio: 'Known for his engaging teaching style, infectious smile, and deep musical intuition, Shubham Rajput makes partner dancing, Bollywood commercial grooves, and foundational movement accessible and exciting for dancers of all ages, from toddlers to adults.',
     achievements: [
       'Certified Latin social dance instructor & energetic performer',
       'Trained over 500 kids in stage confidence, motor skills, and rhythm',
-      'Choreographed 70+ couple first dances and vibrant wedding family sangeets'
+      'Choreographed 70+ couple first dances and vibrant wedding family sangeets',
     ],
     quote: 'Partner dance is a conversation without words; all it takes is rhythm, trust, and a smile.',
-    classesTaught: ['Salsa Sensual & Bachata Partnering', 'Little Stars — Kids Movement & Rhythm', 'Bollywood Commercial & Fusion']
-  }
+    classesTaught: ['Bollywood Commercial & Fusion', 'Salsa Sensual & Bachata Partnering', 'Little Stars — Kids Movement & Rhythm', 'Wedding Sangeet & Event Masterclass'],
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+    actionPhotoUrl: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 
 export const SCHEDULE_SLOTS: ScheduleSlot[] = [
   // Monday
   { id: 'm1', day: 'Monday', time: '07:00 AM – 08:15 AM', className: 'Morning Barre & Conditioning', classId: 'contemporary-flow', level: 'All Levels', instructor: 'Nitin Oad', studioRoom: 'Studio Alpha (Main)', availableSpots: 4, totalSpots: 18 },
   { id: 'm2', day: 'Monday', time: '05:30 PM – 06:45 PM', className: 'Urban Hip-Hop (Beginners)', classId: 'hiphop-urban', level: 'Beginner', instructor: 'Nitin Oad', studioRoom: 'Studio Beta (Acoustic)', availableSpots: 6, totalSpots: 20 },
-  { id: 'm3', day: 'Monday', time: '07:00 PM – 08:15 PM', className: 'Bollywood Commercial & Fusion', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Sonu Shah', studioRoom: 'Studio Alpha (Main)', availableSpots: 2, totalSpots: 24 },
+  { id: 'm3', day: 'Monday', time: '07:00 PM – 08:15 PM', className: 'Bollywood Commercial & Fusion', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 2, totalSpots: 24 },
 
   // Tuesday
   { id: 'tu1', day: 'Tuesday', time: '04:00 PM – 05:00 PM', className: 'Little Stars (Kids Movement)', classId: 'kids-creative-movement', level: 'Beginners (Age 3-8)', instructor: 'Shubham Rajput', studioRoom: 'Studio Beta (Acoustic)', availableSpots: 5, totalSpots: 15 },
@@ -231,16 +324,16 @@ export const SCHEDULE_SLOTS: ScheduleSlot[] = [
   { id: 'tu3', day: 'Tuesday', time: '07:00 PM – 08:15 PM', className: 'Urban Popping & Body Isolations', classId: 'hiphop-urban', level: 'Intermediate', instructor: 'Nitin Oad', studioRoom: 'Studio Alpha (Main)', availableSpots: 3, totalSpots: 20 },
 
   // Wednesday
-  { id: 'w1', day: 'Wednesday', time: '06:00 PM – 07:15 PM', className: 'Bollywood Cinematic Masterpiece', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Sonu Shah', studioRoom: 'Studio Alpha (Main)', availableSpots: 7, totalSpots: 24 },
+  { id: 'w1', day: 'Wednesday', time: '06:00 PM – 07:15 PM', className: 'Bollywood Cinematic Masterpiece', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 7, totalSpots: 24 },
   { id: 'w2', day: 'Wednesday', time: '07:30 PM – 08:45 PM', className: 'Contemporary Floorwork & Flow', classId: 'contemporary-flow', level: 'Intermediate', instructor: 'Nitin Oad', studioRoom: 'Studio Beta (Acoustic)', availableSpots: 5, totalSpots: 18 },
 
   // Thursday
   { id: 'th1', day: 'Thursday', time: '04:00 PM – 05:00 PM', className: 'Little Stars (Kids Rhythm & Games)', classId: 'kids-creative-movement', level: 'Beginners (Age 3-8)', instructor: 'Shubham Rajput', studioRoom: 'Studio Beta (Acoustic)', availableSpots: 3, totalSpots: 15 },
   { id: 'th2', day: 'Thursday', time: '05:30 PM – 06:45 PM', className: 'Urban Hip-Hop & Breaking Basics', classId: 'hiphop-urban', level: 'Intermediate', instructor: 'Nitin Oad', studioRoom: 'Studio Alpha (Main)', availableSpots: 4, totalSpots: 20 },
-  { id: 'th3', day: 'Thursday', time: '07:00 PM – 08:15 PM', className: 'Bollywood Lyrical & Stage Choreography', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Sonu Shah', studioRoom: 'Studio Alpha (Main)', availableSpots: 2, totalSpots: 24 },
+  { id: 'th3', day: 'Thursday', time: '07:00 PM – 08:15 PM', className: 'Bollywood Lyrical & Stage Choreography', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 2, totalSpots: 24 },
 
   // Friday
-  { id: 'f1', day: 'Friday', time: '06:00 PM – 07:15 PM', className: 'Bollywood Commercial Music Video Prep', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Sonu Shah & Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 3, totalSpots: 24 },
+  { id: 'f1', day: 'Friday', time: '06:00 PM – 07:15 PM', className: 'Bollywood Commercial Music Video Prep', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 3, totalSpots: 24 },
   { id: 'f2', day: 'Friday', time: '07:30 PM – 09:00 PM', className: 'Friday Night Open Cypher & Freestyle', classId: 'hiphop-urban', level: 'Open To All', instructor: 'Nitin Oad', studioRoom: 'Studio Beta (Acoustic)', availableSpots: 8, totalSpots: 25 },
 
   // Saturday
@@ -250,16 +343,16 @@ export const SCHEDULE_SLOTS: ScheduleSlot[] = [
   { id: 'sa4', day: 'Saturday', time: '05:30 PM – 07:00 PM', className: 'Salsa & Bachata Social Mastery', classId: 'latin-salsa-bachata', level: 'Intermediate', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 4, totalSpots: 20 },
 
   // Sunday
-  { id: 'su1', day: 'Sunday', time: '09:30 AM – 11:00 AM', className: 'Sunday Mega Dance Cardio Intensive', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Sonu Shah', studioRoom: 'Studio Alpha (Main)', availableSpots: 5, totalSpots: 25 },
-  { id: 'su2', day: 'Sunday', time: '11:30 AM – 01:00 PM', className: 'Masterclass Guest Intensive', classId: 'hiphop-urban', level: 'Open Masterclass', instructor: 'Nitin Oad & Sonu Shah', studioRoom: 'Studio Alpha (Main)', availableSpots: 5, totalSpots: 30 },
-  { id: 'su3', day: 'Sunday', time: '05:00 PM – 07:00 PM', className: 'Latin Social Dancing & Practice Social', classId: 'latin-salsa-bachata', level: 'All Dancers', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 10, totalSpots: 35 }
+  { id: 'su1', day: 'Sunday', time: '09:30 AM – 11:00 AM', className: 'Sunday Mega Dance Cardio Intensive', classId: 'bollywood-fusion', level: 'All Levels', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 5, totalSpots: 25 },
+  { id: 'su2', day: 'Sunday', time: '11:30 AM – 01:00 PM', className: 'Masterclass Guest Intensive', classId: 'hiphop-urban', level: 'Open Masterclass', instructor: 'Nitin Oad & Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 5, totalSpots: 30 },
+  { id: 'su3', day: 'Sunday', time: '05:00 PM – 07:00 PM', className: 'Latin Social Dancing & Practice Social', classId: 'latin-salsa-bachata', level: 'All Dancers', instructor: 'Shubham Rajput', studioRoom: 'Studio Alpha (Main)', availableSpots: 10, totalSpots: 35 },
 ];
 
 export const UPCOMING_WORKSHOPS: Workshop[] = [
   {
     id: 'ws-1',
-    title: 'Cinematic Bollywood & Semi-Classical Lyrical Weekend',
-    instructor: 'Sonu Shah',
+    title: 'Cinematic Bollywood & Lyrical Weekend Intensive',
+    instructor: 'Shubham Rajput',
     date: 'Saturday & Sunday, Aug 22–23',
     time: '4:00 PM – 7:00 PM',
     badge: 'Selling Fast',
@@ -268,7 +361,8 @@ export const UPCOMING_WORKSHOPS: Workshop[] = [
     price: 1499,
     originalPrice: 2200,
     description: 'Learn a complete stage-ready Bollywood lyrical routine with 4K professional video footage provided to each participant.',
-    tags: ['Video Shoot Included', 'Certificate', 'All Levels']
+    tags: ['Video Shoot Included', 'Certificate', 'All Levels'],
+    imageUrl: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'ws-2',
@@ -282,7 +376,8 @@ export const UPCOMING_WORKSHOPS: Workshop[] = [
     price: 999,
     originalPrice: 1500,
     description: 'Master effortless floor slides, threading, freezes, and syncopated rhythmic control to elevate your freestyle.',
-    tags: ['Freestyle Boost', 'High Cardio', 'Intermediate']
+    tags: ['Freestyle Boost', 'High Cardio', 'Intermediate'],
+    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'ws-3',
@@ -296,8 +391,54 @@ export const UPCOMING_WORKSHOPS: Workshop[] = [
     price: 1299,
     originalPrice: 1800,
     description: 'Learn safe, show-stopping dips, musical phrasing, and fluid social dance styling for leads and follows.',
-    tags: ['No Partner Required', 'Social Dance Party Included']
-  }
+    tags: ['No Partner Required', 'Social Dance Party Included'],
+    imageUrl: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?auto=format&fit=crop&w=800&q=80',
+  },
+];
+
+export const SPECIAL_SERVICES: SpecialService[] = [
+  {
+    id: 'svc-1',
+    title: 'Grand Wedding Sangeet Choreography',
+    category: 'Wedding Special',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+    description: 'Complete choreography management for bride & groom, parents, bridesmaids, groomsmen, and 40-person grand family finale.',
+    points: [
+      'Custom studio audio mixing & seamless track mashups',
+      'Step-by-step video practice tutorials for distant guests',
+      'Flexible rehearsal at Merrick Studio or at your residence',
+    ],
+    btnText: 'Inquire Wedding Package',
+    btnAction: 'Wedding Sangeet Choreography',
+  },
+  {
+    id: 'svc-2',
+    title: 'Corporate Wellness & Annual Day',
+    category: 'Corporate Events',
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+    description: 'Energize your workplace culture with rhythmic stress-buster workshops, flashmobs, and company anniversary performance coaching.',
+    points: [
+      'Post-work office wellness Zumba & Bollywood dance cardio',
+      'Annual corporate gala troupe coaching & stage direction',
+      'Team bonding challenges & fun dance cyphers',
+    ],
+    btnText: 'Inquire Corporate Package',
+    btnAction: 'Corporate Dance & Wellness',
+  },
+  {
+    id: 'svc-3',
+    title: 'Merrick Professional Dance Troupe',
+    category: 'Stage & Concerts',
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+    description: 'Book our signature professional company dancers for high-profile cultural festivals, award ceremonies, grand inaugurations, and concerts.',
+    points: [
+      'Mesmerizing Bollywood fusion & street dance routines',
+      'Grand theatrical LED prop & contemporary act choreography',
+      'Turnkey costume, soundtrack, and lighting coordination',
+    ],
+    btnText: 'Book Dance Troupe',
+    btnAction: 'Professional Dance Troupe Booking',
+  },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -307,11 +448,12 @@ export const TESTIMONIALS: Testimonial[] = [
     role: 'Parents of Ananya (Age 7)',
     category: 'kids',
     stars: 5,
-    comment: 'My daughter joined the Little Stars program at age 4 feeling shy and hesitant. Under Shubham Sir\'s guidance, she now performs fearlessly on stage! The instructors at Merrick build genuine character, poise, and happiness.',
+    comment: "My daughter joined the Little Stars program at age 4 feeling shy and hesitant. Under Shubham Sir's guidance, she now performs fearlessly on stage! The instructors at Merrick build genuine character, poise, and happiness.",
     avatarText: 'SP',
     bgGradient: 'from-[#3D6338] to-[#7A9E74]',
     yearsWithStudio: '3 Years Enrolled',
-    enrolledClass: 'Little Stars & Kids Movement'
+    enrolledClass: 'Little Stars & Kids Movement',
+    avatarImageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
   },
   {
     id: 't2',
@@ -319,11 +461,12 @@ export const TESTIMONIALS: Testimonial[] = [
     role: 'Corporate Tech Lead (Age 34)',
     category: 'adult',
     stars: 5,
-    comment: 'I had two left feet and zero rhythm when I walked in for a trial class. Shubham Sir\'s Salsa teaching is so patient, humorous, and structured that within 3 months I was dancing comfortably at weekend socials. Best stress buster after work!',
+    comment: "I had two left feet and zero rhythm when I walked in for a trial class. Shubham Sir's Salsa teaching is so patient, humorous, and structured that within 3 months I was dancing comfortably at weekend socials. Best stress buster after work!",
     avatarText: 'AM',
     bgGradient: 'from-[#5A5854] to-[#2C2B29]',
     yearsWithStudio: '1.5 Years Enrolled',
-    enrolledClass: 'Salsa & Bachata'
+    enrolledClass: 'Salsa & Bachata',
+    avatarImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
   },
   {
     id: 't3',
@@ -331,11 +474,12 @@ export const TESTIMONIALS: Testimonial[] = [
     role: 'University Student & Performer',
     category: 'contemporary',
     stars: 5,
-    comment: 'Sonu Sir and Nitin Sir have unmatched energy! The choreography in Bollywood and Urban Hip-Hop is so fresh and dynamic. The annual stage recital production values are second to none in Ahmedabad. Merrick is my creative home!',
+    comment: 'Nitin Sir and Shubham Sir have unmatched energy! The choreography in Bollywood and Urban Hip-Hop is so fresh and dynamic. The annual stage recital production values are second to none in Ahmedabad. Merrick is my creative home!',
     avatarText: 'KS',
     bgGradient: 'from-[#7A9E74] to-[#3D6338]',
     yearsWithStudio: '2 Years Enrolled',
-    enrolledClass: 'Bollywood Fusion & Urban Hip-Hop'
+    enrolledClass: 'Bollywood Fusion & Urban Hip-Hop',
+    avatarImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
   },
   {
     id: 't4',
@@ -343,88 +487,128 @@ export const TESTIMONIALS: Testimonial[] = [
     role: 'Newly Married Couple',
     category: 'wedding',
     stars: 5,
-    comment: 'Sonu Shah choreographed our entire wedding sangeet — from our couple first dance to our 40-person family flashmob. They customized the steps so even our grandparents danced comfortably. It made our wedding night unforgettable!',
+    comment: 'Shubham Rajput and Nitin Oad choreographed our entire wedding sangeet — from our couple first dance to our 40-person family flashmob. They customized the steps so even our grandparents danced comfortably. It made our wedding night unforgettable!',
     avatarText: 'RT',
     bgGradient: 'from-[#3D6338] to-[#5A5854]',
     yearsWithStudio: 'Wedding Choreography Client',
-    enrolledClass: 'Custom Wedding Sangeet Package'
-  }
+    enrolledClass: 'Custom Wedding Sangeet Package',
+    avatarImageUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&q=80',
+  },
 ];
 
-export const STUDIO_AMENITIES = [
+export const STUDIO_AMENITIES: StudioAmenity[] = [
   {
+    id: 'amenity-1',
     title: '1,800 sq.ft Sprung Wood Floors',
-    description: 'European multi-layered shock-absorbing subfloors engineered to protect dancers\' knees, ankles, and joints during high-impact jumps, turns, and footwork.',
-    iconName: 'ShieldCheck'
+    description: "European multi-layered shock-absorbing subfloors engineered to protect dancers' knees, ankles, and joints during high-impact jumps, turns, and footwork.",
+    iconName: 'ShieldCheck',
+    imageUrl: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=800&q=80',
   },
   {
+    id: 'amenity-2',
     title: '12-ft High Floor-to-Ceiling Mirrors',
     description: 'Distortion-free acoustic-backed mirror walls allowing complete 360-degree alignment feedback and posture correction from any spot in the room.',
-    iconName: 'Maximize2'
+    iconName: 'Maximize2',
+    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',
   },
   {
+    id: 'amenity-3',
     title: 'JBL Pro Concert Surround Sound',
     description: 'Acoustically treated sound-dampened studios with crisp high-definition audio separation so you feel every bass drop, drum kick, and subtle melody.',
-    iconName: 'Volume2'
+    iconName: 'Volume2',
+    imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
   },
   {
+    id: 'amenity-4',
     title: 'Climate Controlled Air Purification',
     description: 'High-volume fresh air ventilation and HEPA purification maintaining a crisp, oxygen-rich 22°C environment throughout intense choreography sessions.',
-    iconName: 'Wind'
+    iconName: 'Wind',
+    imageUrl: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80',
   },
   {
+    id: 'amenity-5',
     title: 'Luxury Green Rooms & Changing Suites',
     description: 'Private, secure lockers, changing booths, touch-up vanity stations, filtered water bar, and a tranquil student relaxation lounge.',
-    iconName: 'Sparkles'
+    iconName: 'Sparkles',
+    imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
   },
   {
+    id: 'amenity-6',
     title: 'Safe Campus with CCTV & Free Parking',
-    description: 'Dedicated parking on ground floor in Satellite, 24/7 CCTV surveillance, and secure check-in protocols for complete peace of mind.',
-    iconName: 'Lock'
-  }
+    description: 'Dedicated parking on ground floor on Hanshoura Road, 24/7 CCTV surveillance, and secure check-in protocols for complete peace of mind.',
+    iconName: 'Lock',
+    imageUrl: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=800&q=80',
+  },
 ];
 
-export const FREQUENT_FAQS = [
+export const FREQUENT_FAQS: FaqItem[] = [
   {
     id: 'faq-1',
     question: 'How do I book my Free Trial Class, and what happens during it?',
     category: 'Trial & Enrollment',
-    answer: 'Booking your free trial is 100% complimentary with zero commitment! Simply click "Book a Free Trial" on this page, choose your preferred dance style and day. When you arrive, you\'ll meet our faculty 10 minutes prior, join the full active class alongside other students, and receive friendly guidance on your movement and progress.'
+    answer: "Booking your free trial is 100% complimentary with zero commitment! Simply click \"Book a Free Trial\" on this page, choose your preferred dance style and day. When you arrive at our Hanshoura Road studio, you'll meet our faculty 10 minutes prior, join the full active class alongside other students, and receive friendly guidance on your movement and progress.",
   },
   {
     id: 'faq-2',
     question: 'I have never danced before and feel self-conscious. Are your beginner batches really beginner-friendly?',
     category: 'Skill Levels',
-    answer: 'Over 65% of our adult students walked through our doors with absolutely zero prior dance background. Our beginner batches are specifically structured with zero judgment: Sonu Shah, Nitin Oad, and Shubham Rajput break down steps slowly, repeat patterns at half-tempo, and emphasize personal joy and rhythm over perfection.'
+    answer: 'Over 65% of our adult students walked through our doors with absolutely zero prior dance background. Our beginner batches are specifically structured with zero judgment: Nitin Oad and Shubham Rajput break down steps slowly, repeat patterns at half-tempo, and emphasize personal joy and rhythm over perfection.',
   },
   {
     id: 'faq-3',
     question: 'What is the fee structure and payment options?',
     category: 'Fees & Packages',
-    answer: 'Our fee packages are transparent and structured by monthly, quarterly, and annual tiers. Monthly 2-days/week batches start from ₹2,200/month. Quarterly packages offer up to 15% savings, and Annual enrollments save up to 25% plus include complimentary studio masterclasses and stage recital vouchers. We accept UPI, Cards, and Net Banking.'
+    answer: 'Our fee packages are transparent and structured by monthly, quarterly, and annual tiers. Monthly 2-days/week batches start from ₹2,200/month. Quarterly packages offer up to 15% savings, and Annual enrollments save up to 25% plus include complimentary studio masterclasses and stage recital vouchers. We accept UPI, Cards, and Net Banking.',
   },
   {
     id: 'faq-4',
     question: 'What should I wear to my first class?',
     category: 'Class Preparation',
-    answer: 'For Bollywood, Hip-Hop, and Salsa: Wear comfortable athletic clothing (track pants, leggings, t-shirt) and clean indoor sneakers. For Contemporary & Lyrical: Stretchable leggings/tights with dance socks or barefoot.'
+    answer: 'For Bollywood, Hip-Hop, and Salsa: Wear comfortable athletic clothing (track pants, leggings, t-shirt) and clean indoor sneakers. For Contemporary & Lyrical: Stretchable leggings/tights with dance socks or barefoot.',
   },
   {
     id: 'faq-5',
     question: 'What happens if I miss a scheduled class due to work or travel?',
     category: 'Attendance & Makeups',
-    answer: 'We understand busy schedules! Active monthly and quarterly students are granted up to 2 flexible make-up classes per month. You can attend any parallel batch in your category or an open weekend session by notifying us in advance via WhatsApp at +91 99098 43221.'
+    answer: 'We understand busy schedules! Active monthly and quarterly students are granted up to 2 flexible make-up classes per month. You can attend any parallel batch in your category or an open weekend session by notifying us in advance via WhatsApp at +91 99098 43221.',
   },
   {
     id: 'faq-6',
     question: 'Do all students get to perform on stage in annual showcases?',
     category: 'Performances & Recitals',
-    answer: 'Yes! We believe stage performance is where true confidence blossoms. Every enrolled student—from our 3-year-old Little Stars to our adult Salsa and Bollywood dancers—is invited to participate in our signature Grand Annual Day Recital held at premier auditoriums in Ahmedabad with professional lighting, costumes, and 4K filming.'
+    answer: 'Yes! We believe stage performance is where true confidence blossoms. Every enrolled student—from our 3-year-old Little Stars to our adult Salsa and Bollywood dancers—is invited to participate in our signature Grand Annual Day Recital held at premier auditoriums in Ahmedabad with professional lighting, costumes, and 4K filming.',
   },
   {
     id: 'faq-7',
     question: 'Do you offer private 1-on-1 coaching and wedding sangeet choreography?',
     category: 'Specialized Services',
-    answer: 'Yes! Under Sonu Shah\'s artistic direction, our custom choreography division specializes in Wedding Sangeet choreography (Bride & Groom first dance, family concepts, flashmobs, audio mixing), Corporate team-building workshops, and private 1-on-1 intensive technique coaching.'
-  }
+    answer: 'Yes! Our choreography team led by Shubham Rajput and Nitin Oad specializes in Wedding Sangeet choreography (Bride & Groom first dance, family concepts, flashmobs, audio mixing), Corporate team-building workshops, and private 1-on-1 intensive technique coaching.',
+  },
 ];
+
+export const DEFAULT_PRICING_CONFIG: PricingConfig = {
+  baseMonthly2Days: 2200,
+  baseMonthly3Days: 3000,
+  baseMonthlyUnlimited: 4500,
+  quarterlyDiscountPercent: 15,
+  annualDiscountPercent: 25,
+  siblingDiscountPercent: 10,
+  recitalPassFee: 1500,
+  privateCoachingFee: 1800,
+  annualGiftsText: 'Complimentary Merrick Dance Studio Tee, Water Bottle & Priority Masterclass Seating.',
+  guaranteeNotice: '100% Risk-Free: If your first trial class isn’t a fit, no payment is processed.',
+};
+
+export const INITIAL_STUDIO_DATA: StudioFullData = {
+  generalInfo: DEFAULT_GENERAL_INFO,
+  heroConfig: DEFAULT_HERO_CONFIG,
+  classes: DANCE_CLASSES,
+  instructors: INSTRUCTORS,
+  scheduleSlots: SCHEDULE_SLOTS,
+  workshops: UPCOMING_WORKSHOPS,
+  specialServices: SPECIAL_SERVICES,
+  amenities: STUDIO_AMENITIES,
+  testimonials: TESTIMONIALS,
+  faqs: FREQUENT_FAQS,
+  pricingConfig: DEFAULT_PRICING_CONFIG,
+};

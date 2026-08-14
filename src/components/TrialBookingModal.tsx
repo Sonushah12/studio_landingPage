@@ -94,7 +94,7 @@ export const TrialBookingModal: React.FC<TrialBookingModalProps> = ({
                 Book Your 100% Free Trial Class
               </h3>
               <p className="text-xs text-[#5A5854] mt-0.5">
-                No credit card or commitment required · Satellite, Ahmedabad
+                No credit card or commitment required · Hanshoura Road, Ahmedabad
               </p>
             </div>
           </div>

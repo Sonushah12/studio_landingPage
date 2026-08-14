@@ -52,7 +52,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
     switch (action) {
       case 'trial':
         botResponse =
-          'Every new dancer is entitled to 1 complimentary Free Trial Class with zero commitment! You can attend any active batch, meet our faculty (Sonu Shah, Nitin Oad, or Shubham Rajput), and experience our shock-absorbing sprung floors in Satellite.';
+          'Every new dancer is entitled to 1 complimentary Free Trial Class with zero commitment! You can attend any active batch, meet our faculty (Nitin Oad or Shubham Rajput), and experience our shock-absorbing sprung floors on Hanshoura Road.';
         nextOptions = [{ label: 'Book My Free Trial Now', action: 'trigger_booking' }];
         break;
 
@@ -79,8 +79,8 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
 
       case 'sangeet':
         botResponse =
-          'Under Sonu Shah\'s direction, we provide end-to-end Wedding Sangeet choreography: Bride & Groom first dance, parents retro medleys, family flashmobs, custom studio song mixing, and take-home video practice guides. Rehearsals available at our studio or your residence in Ahmedabad.';
-        nextOptions = [{ label: 'Chat on WhatsApp with Sonu Shah', action: 'whatsapp_sangeet' }];
+          'Our senior choreography team provides end-to-end Wedding Sangeet choreography: Bride & Groom first dance, parents retro medleys, family flashmobs, custom studio song mixing, and take-home video practice guides. Rehearsals available at our studio on Hanshoura Road or your residence in Ahmedabad.';
+        nextOptions = [{ label: 'Chat on WhatsApp for Sangeet', action: 'whatsapp_sangeet' }];
         break;
 
       case 'pricing':
@@ -109,7 +109,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
         return;
 
       case 'whatsapp_sangeet':
-        window.open('https://wa.me/919909843221?text=Hi%20Sonu%20Shah%2C%20I%20would%20like%20to%20inquire%20about%20Wedding%20Sangeet%20Choreography', '_blank');
+        window.open('https://wa.me/919909843221?text=Hi%20Merrick%20Dance%20Team%2C%20I%20would%20like%20to%20inquire%20about%20Wedding%20Sangeet%20Choreography', '_blank');
         return;
 
       case 'trigger_pricing_calc':
@@ -120,7 +120,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
 
       default:
         botResponse =
-          'Thank you for your question! You can visit us in Satellite, Ahmedabad, or our front desk coordinators are happy to assist you directly at +91 99098 43221 or via email at sonu.shah99098@gmail.com.';
+          'Thank you for your question! You can visit us on Hanshoura Road, Ahmedabad, or our front desk coordinators are happy to assist you directly at +91 99098 43221 or via email at sonu.shah99098@gmail.com.';
     }
 
     setMessages((prev) => [
@@ -149,7 +149,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
     };
 
     let reply =
-      'Thank you! At Merrick Dance Studio, Sonu Shah, Nitin Oad, and Shubham Rajput welcome dancers of all levels. Our studio is open Monday to Saturday 7 AM – 9 PM and Sunday 8 AM – 6 PM in Satellite, Ahmedabad. Would you like to reserve a free trial pass?';
+      'Thank you! At Merrick Dance Studio, Nitin Oad and Shubham Rajput welcome dancers of all levels. Our studio is open Monday to Saturday 7 AM – 9 PM and Sunday 8 AM – 6 PM on Hanshoura Road, Ahmedabad. Would you like to reserve a free trial pass?';
 
     const lower = userText.toLowerCase();
     if (lower.includes('price') || lower.includes('fee') || lower.includes('cost')) {
@@ -160,10 +160,10 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
         'For Bollywood/Hip-Hop/Salsa: comfortable athletic wear and clean indoor sneakers. For Contemporary: stretchable tights/leggings or barefoot.';
     } else if (lower.includes('where') || lower.includes('address') || lower.includes('location')) {
       reply =
-        'We are conveniently located in Satellite, Ahmedabad (near SG Highway and Sindhu Bhavan Road) with free dedicated parking on premise.';
-    } else if (lower.includes('tutor') || lower.includes('instructor') || lower.includes('teacher')) {
+        'We are conveniently located on Hanshoura Road, Ahmedabad with free dedicated parking on premise.';
+    } else if (lower.includes('tutor') || lower.includes('instructor') || lower.includes('teacher') || lower.includes('choreographer')) {
       reply =
-        'Our 3 acclaimed master tutors are Sonu Shah (Artistic Director), Nitin Oad (Street & Contemporary Lead), and Shubham Rajput (Latin & Kids Movement Lead).';
+        'Our 2 acclaimed master choreographers are Nitin Oad (Urban & Contemporary Specialist) and Shubham Rajput (Latin, Bollywood & Kids Movement Lead).';
     }
 
     setMessages((prev) => [

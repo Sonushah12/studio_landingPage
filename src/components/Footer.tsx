@@ -1,5 +1,6 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Clock, Heart, Sparkles, MessageCircle, ArrowUp } from 'lucide-react';
+import { useStudioData } from '../context/StudioDataContext';
 
 interface FooterProps {
   onOpenTrialModal: () => void;
@@ -7,6 +8,9 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) => {
+  const { data } = useStudioData();
+  const { generalInfo } = data;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -29,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
               Ready to feel the beat? Experience your 1st Free Trial Class.
             </h3>
             <p className="text-xs text-[#9E9B92]">
-              Join over 1,200 enthusiastic dancers in Ahmedabad. Open to beginners, kids, teens, and adults.
+              Join over {generalInfo.stats.studentsCount} enthusiastic dancers in Ahmedabad. Open to beginners, kids, teens, and adults.
             </p>
           </div>
 
@@ -56,63 +60,48 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#3D6338] text-white flex items-center justify-center font-display font-bold text-lg">
-                M
+                {generalInfo.studioName.charAt(0)}
               </div>
               <div>
                 <div className="font-display font-bold text-xl text-white tracking-tight leading-none">
-                  MERRICK
+                  {generalInfo.studioName}
                 </div>
                 <div className="text-[10px] tracking-[0.2em] uppercase text-[#7A9E74] font-medium mt-0.5">
-                  Dance &amp; Entertainment Studio
+                  {generalInfo.tagline}
                 </div>
               </div>
             </div>
 
             <p className="text-[#9E9B92] leading-relaxed pr-4">
-              Ahmedabad’s premier dance institution dedicated to creative excellence, authentic technique, and passionate self-expression. Led by renowned choreographers Sonu Shah, Nitin Oad, and Shubham Rajput.
+              Ahmedabad’s premier dance institution dedicated to creative excellence, authentic technique, and passionate self-expression. Directed by Sonu Shah on {(generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad').split(',')[1]?.trim() || (generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road')}.
             </p>
 
             {/* Social Media Links with Sonushah7373 */}
-            <div className="pt-2">
-              <div className="text-[11px] font-bold uppercase text-[#B5CAB0] tracking-wider mb-2">
+            <div className="pt-2 space-y-2">
+              <div className="text-[11px] font-bold uppercase text-[#B5CAB0] tracking-wider">
                 Connect on Social Media:
               </div>
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 {/* Instagram */}
                 <a
-                  href="https://instagram.com/Sonushah7373"
+                  href={`https://instagram.com/${generalInfo.socialLinks?.instagram || 'Sonushah7373'}`}
                   target="_blank"
                   rel="noreferrer"
                   className="px-3 py-1.5 bg-[#2C2B29] hover:bg-[#3D6338] text-[#F7F5F0] rounded-full border border-[#5A5854] transition flex items-center gap-1.5 text-xs font-medium"
                 >
                   <span>📸 Instagram:</span>
-                  <strong className="text-[#D8E8D4]">@Sonushah7373</strong>
+                  <strong className="text-[#D8E8D4]">@{generalInfo.socialLinks?.instagram || 'Sonushah7373'}</strong>
                 </a>
 
-                {/* Facebook */}
+                {/* WhatsApp */}
                 <a
-                  href="https://facebook.com/Sonushah7373"
+                  href={`https://wa.me/${generalInfo.whatsapp || '919909843221'}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 bg-[#2C2B29] hover:bg-[#3D6338] text-[#F7F5F0] rounded-full border border-[#5A5854] transition"
-                  title="Facebook: Sonushah7373"
+                  className="px-3 py-1.5 bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] rounded-full border border-[#25D366]/40 transition flex items-center gap-1.5 text-xs font-medium"
                 >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                </a>
-
-                {/* Twitter / X */}
-                <a
-                  href="https://twitter.com/Sonushah7373"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2 bg-[#2C2B29] hover:bg-[#3D6338] text-[#F7F5F0] rounded-full border border-[#5A5854] transition"
-                  title="Twitter / X: Sonushah7373"
-                >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
                 </a>
               </div>
             </div>
@@ -175,20 +164,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
             </ul>
           </div>
 
-          {/* Col 3: Master Tutors & Quick Links */}
+          {/* Col 3: Master Choreographers & Quick Links */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="font-display font-bold text-sm text-[#F7F5F0] uppercase tracking-wider">
-              Master Tutors
+              Choreographers
             </h4>
             <ul className="space-y-2 text-[#9E9B92]">
-              <li>
-                <button
-                  onClick={() => scrollToSection('instructors')}
-                  className="hover:text-[#D8E8D4] transition cursor-pointer text-left"
-                >
-                  Sonu Shah (Lead Choreographer)
-                </button>
-              </li>
               <li>
                 <button
                   onClick={() => scrollToSection('instructors')}
@@ -202,7 +183,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
                   onClick={() => scrollToSection('instructors')}
                   className="hover:text-[#D8E8D4] transition cursor-pointer text-left"
                 >
-                  Shubham Rajput (Latin &amp; Kids)
+                  Shubham Rajput (Latin, Bollywood &amp; Kids)
                 </button>
               </li>
               <li className="pt-2">
@@ -225,27 +206,27 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#7A9E74] flex-shrink-0 mt-0.5" />
                 <span>
-                  3rd Floor, Merrick Arts Complex, Satellite Road (Near SG Highway &amp; Sindhu Bhavan), Ahmedabad, Gujarat 380015
+                  {generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
-                <a href="tel:+919909843221" className="hover:text-white transition font-semibold text-[#D8E8D4]">
-                  +91 99098 43221 (Call &amp; WhatsApp)
+                <a href={`tel:${generalInfo.phone || '+919909843221'}`} className="hover:text-white transition font-semibold text-[#D8E8D4]">
+                  {generalInfo.phoneDisplay || '+91 99098 43221'} (Call &amp; WhatsApp)
                 </a>
               </div>
 
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
-                <a href="mailto:sonu.shah99098@gmail.com" className="hover:text-white transition text-[#D8E8D4]">
-                  sonu.shah99098@gmail.com
+                <a href={`mailto:${generalInfo.email || 'sonu.shah99098@gmail.com'}`} className="hover:text-white transition text-[#D8E8D4]">
+                  {generalInfo.email || 'sonu.shah99098@gmail.com'}
                 </a>
               </div>
 
               <div className="flex items-center gap-2.5 text-[11px]">
                 <Clock className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
-                <span>Mon–Sat: 7 AM – 9 PM | Sun: 8 AM – 6 PM</span>
+                <span>Mon–Sat: {generalInfo.operatingHoursWeekday || '7:00 AM – 9:30 PM'} | Sun: {generalInfo.operatingHoursWeekend || generalInfo.operatingHoursSunday || '8:00 AM – 7:00 PM'}</span>
               </div>
             </div>
           </div>
@@ -254,11 +235,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
         {/* Bottom copyright & back to top */}
         <div className="pt-8 mt-8 border-t border-[#2C2B29] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9E9B92]">
           <div>
-            &copy; {new Date().getFullYear()} Merrick Dance &amp; Entertainment Studio. All rights reserved. Directed by Sonu Shah.
+            &copy; {new Date().getFullYear()} {generalInfo.studioName || 'Merrick Dance Studio'}. All rights reserved. Directed by Sonu Shah.
           </div>
 
           <div className="flex items-center gap-4">
-            <span>Satellite, Ahmedabad</span>
+            <span>{(generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad').split(',')[0]}</span>
             <span>·</span>
             <button
               onClick={scrollToTop}

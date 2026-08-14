@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Calendar, Clock, MapPin, Sparkles, Menu, X, MessageCircle } from 'lucide-react';
+import { useStudioData } from '../context/StudioDataContext';
 
 interface NavbarProps {
   onOpenTrialModal: (preferredClass?: string) => void;
@@ -10,6 +11,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, onOpenAdvisor }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data } = useStudioData();
+  const { generalInfo } = data;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,39 +33,41 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
   return (
     <>
       {/* Top micro-bar for studio announcements */}
-      <div className="bg-[#1E1D1B] text-[#F7F5F0] text-xs py-1.5 px-4 hidden md:block border-b border-[#2C2B29]/30">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4 text-[#D9D7D0]">
-            <span className="flex items-center gap-1.5 font-medium text-[#D8E8D4]">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#7A9E74] animate-pulse"></span>
-              Studio Open Today · 7:00 AM – 9:00 PM
-            </span>
-            <span className="text-[#9E9B92]">|</span>
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-[#B5CAB0]" />
-              Satellite, Ahmedabad (Near SG Highway)
-            </span>
-          </div>
+      {generalInfo.announcementBarEnabled && (
+        <div className="bg-[#1E1D1B] text-[#F7F5F0] text-xs py-1.5 px-4 hidden md:block border-b border-[#2C2B29]/30">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4 text-[#D9D7D0]">
+              <span className="flex items-center gap-1.5 font-medium text-[#D8E8D4]">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#7A9E74] animate-pulse"></span>
+                {generalInfo.announcementBarText || `Studio Open Today · ${generalInfo.operatingHoursWeekday || '7:00 AM – 9:30 PM'}`}
+              </span>
+              <span className="text-[#9E9B92]">|</span>
+              <span className="flex items-center gap-1 truncate max-w-xs">
+                <MapPin className="w-3.5 h-3.5 text-[#B5CAB0] flex-shrink-0" />
+                <span className="truncate">{generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}</span>
+              </span>
+            </div>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onOpenQuiz}
-              className="text-[#D8E8D4] hover:text-white transition flex items-center gap-1 text-[11px] font-medium cursor-pointer"
-            >
-              <Sparkles className="w-3 h-3 text-[#B5CAB0]" />
-              30-Sec "Find Your Dance Match" Quiz
-            </button>
-            <span className="text-[#9E9B92]">|</span>
-            <a
-              href="tel:+919909843221"
-              className="text-[#D9D7D0] hover:text-[#B5CAB0] transition flex items-center gap-1 font-medium"
-            >
-              <Phone className="w-3 h-3 text-[#B5CAB0]" />
-              +91 99098 43221
-            </a>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onOpenQuiz}
+                className="text-[#D8E8D4] hover:text-white transition flex items-center gap-1 text-[11px] font-medium cursor-pointer"
+              >
+                <Sparkles className="w-3 h-3 text-[#B5CAB0]" />
+                30-Sec "Find Your Dance Match" Quiz
+              </button>
+              <span className="text-[#9E9B92]">|</span>
+              <a
+                href={`tel:${generalInfo.phone || '+919909843221'}`}
+                className="text-[#D9D7D0] hover:text-[#B5CAB0] transition flex items-center gap-1 font-medium"
+              >
+                <Phone className="w-3 h-3 text-[#B5CAB0]" />
+                {generalInfo.phoneDisplay || '+91 99098 43221'}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Sticky Navbar */}
       <header
@@ -81,29 +86,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
               scrollToSection('home');
             }}
             className="flex items-center gap-3 group text-left cursor-pointer"
-            aria-label="Merrick Dance and Entertainment Studio Homepage"
+            aria-label={`${generalInfo.studioName} Homepage`}
           >
-            {/* Custom Dance Ring Vector */}
-            <div className="relative w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-full bg-[#D8E8D4]/60 border border-[#B5CAB0] transition-transform group-hover:scale-105 duration-300">
-              <svg width="28" height="28" viewBox="0 0 44 44" fill="none" className="transform group-hover:rotate-6 transition-transform">
-                <circle cx="22" cy="22" r="19" stroke="#7A9E74" strokeWidth="1.5" strokeDasharray="3 2" />
-                <line x1="22" y1="32" x2="20" y2="40" stroke="#3D6338" strokeWidth="2.8" strokeLinecap="round" />
-                <path d="M22 32 C26 28 30 24 33 20" stroke="#3D6338" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-                <path d="M22 26 C21 29 22 32 22 32" stroke="#2C2B29" strokeWidth="2.8" strokeLinecap="round" fill="none" />
-                <path d="M22 26 C19 22 16 18 14 15" stroke="#2C2B29" strokeWidth="2" strokeLinecap="round" fill="none" />
-                <circle cx="22" cy="13" r="3.5" fill="#2C2B29" />
-                <path d="M19 30 C16 28 14 31 16 33 C17 31 18 30 19 30Z" fill="#7A9E74" opacity="0.8" />
-              </svg>
-            </div>
+            {/* Custom Dance Ring Vector or Logo */}
+            {generalInfo.logoUrl ? (
+              <img
+                src={generalInfo.logoUrl}
+                alt={generalInfo.studioName}
+                className="w-11 h-11 rounded-full object-cover border border-[#B5CAB0]"
+              />
+            ) : (
+              <div className="relative w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-full bg-[#D8E8D4]/60 border border-[#B5CAB0] transition-transform group-hover:scale-105 duration-300">
+                <svg width="28" height="28" viewBox="0 0 44 44" fill="none" className="transform group-hover:rotate-6 transition-transform">
+                  <circle cx="22" cy="22" r="19" stroke="#7A9E74" strokeWidth="1.5" strokeDasharray="3 2" />
+                  <line x1="22" y1="32" x2="20" y2="40" stroke="#3D6338" strokeWidth="2.8" strokeLinecap="round" />
+                  <path d="M22 32 C26 28 30 24 33 20" stroke="#3D6338" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+                  <path d="M22 26 C21 29 22 32 22 32" stroke="#2C2B29" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+                  <path d="M22 26 C19 22 16 18 14 15" stroke="#2C2B29" strokeWidth="2" strokeLinecap="round" fill="none" />
+                  <circle cx="22" cy="13" r="3.5" fill="#2C2B29" />
+                  <path d="M19 30 C16 28 14 31 16 33 C17 31 18 30 19 30Z" fill="#7A9E74" opacity="0.8" />
+                </svg>
+              </div>
+            )}
 
             <div>
               <div className="font-display font-bold text-xl sm:text-2xl tracking-tight text-[#1E1D1B] leading-none group-hover:text-[#3D6338] transition-colors">
-                MERRICK
+                {(generalInfo.studioName || 'Merrick').split(' ')[0]}
               </div>
               <div className="text-[10px] tracking-[0.22em] uppercase font-medium text-[#7A9E74] flex items-center gap-1.5 mt-0.5">
-                <span>Dance</span>
+                <span>{(generalInfo.tagline || 'Dance & Entertainment').split('&')[0]?.trim() || 'Dance'}</span>
                 <span className="inline-block w-1 h-1 rounded-full bg-[#B5CAB0]"></span>
-                <span className="text-[#5A5854]">Entertainment</span>
+                <span className="text-[#5A5854]">{(generalInfo.tagline || 'Dance & Entertainment').split('&')[1]?.trim() || 'Entertainment'}</span>
               </div>
             </div>
           </a>
@@ -241,7 +254,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
                 onClick={() => scrollToSection('instructors')}
                 className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
               >
-                Faculty &amp; Tutors (Nitin Oad, Shubham Rajput, Sonu Shah)
+                Faculty &amp; Choreographers
               </button>
               <button
                 onClick={() => scrollToSection('pricing')}
@@ -282,16 +295,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
 
                 <div className="grid grid-cols-2 gap-2 mt-1">
                   <a
-                    href="https://wa.me/919909843221?text=Hi%20Merrick%20Dance%20Studio%2C%20I%20would%20like%20to%20inquire%20about%20classes"
+                    href={`https://wa.me/${generalInfo.whatsapp}?text=Hi%20Merrick%20Dance%20Studio%2C%20I%20would%20like%20to%20inquire%20about%20classes`}
                     target="_blank"
                     rel="noreferrer"
                     className="py-2.5 bg-[#25D366] text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 shadow-sm"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    WhatsApp (+91 99098 43221)
+                    WhatsApp
                   </a>
                   <a
-                    href="tel:+919909843221"
+                    href={`tel:${generalInfo.phone}`}
                     className="py-2.5 bg-[#1E1D1B] text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5"
                   >
                     <Phone className="w-4 h-4" />

@@ -1,143 +1,106 @@
 import React from 'react';
-import { Heart, Music, Building2, Sparkles, Check, ArrowRight, Video, MessageCircle } from 'lucide-react';
+import { Heart, Check, ArrowRight } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
+import { useStudioData } from '../context/StudioDataContext';
 
 interface SpecialServicesSectionProps {
   onRequestCustomQuote: (serviceName: string) => void;
 }
 
 export const SpecialServicesSection: React.FC<SpecialServicesSectionProps> = ({ onRequestCustomQuote }) => {
+  const { data } = useStudioData();
+  const servicesList = data.specialServices || [];
+
   return (
     <section id="wedding-services" className="py-20 bg-[#F7F5F0] border-t border-[#D9D7D0] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D8E8D4] text-[#3D6338] text-xs font-bold uppercase tracking-widest mb-3">
-            <Heart className="w-3.5 h-3.5" />
-            <span>Signature Bespoke Choreography</span>
+        {/* Section Header with Scroll Reveal */}
+        <ScrollReveal animation="fade-up" duration={650}>
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D8E8D4] text-[#3D6338] text-xs font-bold uppercase tracking-widest mb-3">
+              <Heart className="w-3.5 h-3.5" />
+              <span>Signature Bespoke Choreography</span>
+            </div>
+            <h2 className="font-display text-3xl sm:text-5xl font-bold text-[#1E1D1B] tracking-tight">
+              Wedding Sangeet &amp; Event Choreography
+            </h2>
+            <p className="text-[#5A5854] text-sm sm:text-base mt-3">
+              Make your milestone celebrations unforgettable on Hanshoura Road. From romantic couple first dances to showstopping 40-person family medleys and corporate team-building.
+            </p>
           </div>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold text-[#1E1D1B] tracking-tight">
-            Wedding Sangeet &amp; Event Choreography
-          </h2>
-          <p className="text-[#5A5854] text-sm mt-3">
-            Make your milestone celebrations unforgettable. From romantic couple first dances to showstopping 40-person family medleys and corporate team-building.
-          </p>
-        </div>
+        </ScrollReveal>
 
-        {/* 3 Specialized Services Cards */}
+        {/* 3 Specialized Services Cards with Staggered Scroll Reveal */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Service 1: Wedding Sangeet */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-sm hover:shadow-xl transition flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#D8E8D4] text-[#3D6338] flex items-center justify-center">
-                <Heart className="w-6 h-6" />
-              </div>
-              <h3 className="font-display font-bold text-2xl text-[#1E1D1B]">
-                Grand Wedding Sangeet Choreography
-              </h3>
-              <p className="text-xs text-[#5A5854] leading-relaxed">
-                Complete choreography management for bride &amp; groom, parents, bridesmaids, groomsmen, and grand family finale.
-              </p>
-
-              <ul className="space-y-2 text-xs text-[#2C2B29] pt-2">
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Custom studio audio mixing &amp; song seamless mashups</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Step-by-step video practice tutorials for out-of-town guests</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Flexible rehearsal at Merrick Studio or at your residence</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => onRequestCustomQuote('Wedding Sangeet Choreography')}
-              className="mt-6 w-full py-3 bg-[#3D6338] hover:bg-[#2F4E2B] text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer flex items-center justify-center gap-2"
+          {servicesList.map((service, idx) => (
+            <ScrollReveal
+              key={idx}
+              animation="fade-up"
+              delay={idx * 110}
+              duration={700}
+              className="h-full"
             >
-              <span>Inquire Wedding Package</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+              <div className="bg-white rounded-3xl border border-[#D9D7D0] hover:border-[#3D6338] shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between overflow-hidden group hover:-translate-y-1.5 h-full">
+                <div>
+                  {/* Photo Header */}
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[#2C2B29]">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-          {/* Service 2: Corporate Wellness */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-sm hover:shadow-xl transition flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#EFEDE7] text-[#5A5854] flex items-center justify-center">
-                <Building2 className="w-6 h-6" />
+                    {/* Badge */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="px-3 py-1 rounded-full bg-[#3D6338] text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                        {service.category}
+                      </span>
+                    </div>
+
+                    {/* Title overlay on bottom of photo */}
+                    <div className="absolute bottom-3 left-3 right-3 z-10">
+                      <h3 className="font-display font-bold text-xl text-white leading-tight drop-shadow-sm">
+                        {service.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-6 space-y-4">
+                    <p className="text-xs sm:text-sm text-[#5A5854] leading-relaxed">
+                      {service.description}
+                    </p>
+
+                    <ul className="space-y-2 text-xs text-[#2C2B29] pt-2 border-t border-[#EFEDE7]">
+                      {service.points.map((pt, pIdx) => (
+                        <li key={pIdx} className="flex items-start gap-2">
+                          <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
+                          <span>{pt}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <div className="p-6 pt-0">
+                  <button
+                    onClick={() => onRequestCustomQuote(service.btnAction || service.title)}
+                    className={`w-full py-3 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                      idx === 1
+                        ? 'bg-[#1E1D1B] hover:bg-[#2C2B29]'
+                        : 'bg-[#3D6338] hover:bg-[#2F4E2B]'
+                    }`}
+                  >
+                    <span>{service.btnText}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-              <h3 className="font-display font-bold text-2xl text-[#1E1D1B]">
-                Corporate Wellness &amp; Annual Day
-              </h3>
-              <p className="text-xs text-[#5A5854] leading-relaxed">
-                Energize your workplace culture with rhythmic stress-buster workshops, flashmobs, and company anniversary performance coaching.
-              </p>
-
-              <ul className="space-y-2 text-xs text-[#2C2B29] pt-2">
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Post-work office wellness Zumba &amp; Bollywood cardio</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Annual corporate gala troupe coaching &amp; stage direction</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Team bonding challenges &amp; dance cyphers</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => onRequestCustomQuote('Corporate Dance & Wellness')}
-              className="mt-6 w-full py-3 bg-[#1E1D1B] hover:bg-[#2C2B29] text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>Inquire Corporate Package</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Service 3: Professional Performance Troupe */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-sm hover:shadow-xl transition flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#D8E8D4] text-[#3D6338] flex items-center justify-center">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <h3 className="font-display font-bold text-2xl text-[#1E1D1B]">
-                Merrick Professional Dance Troupe
-              </h3>
-              <p className="text-xs text-[#5A5854] leading-relaxed">
-                Book our signature professional company dancers for high-profile cultural festivals, award ceremonies, grand inaugurations, and music concerts.
-              </p>
-
-              <ul className="space-y-2 text-xs text-[#2C2B29] pt-2">
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Mesmerizing Classical fusion and Kathak jugalbandis</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Grand theatrical LED prop &amp; contemporary act choreography</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#3D6338] flex-shrink-0 mt-0.5" />
-                  <span>Turnkey costume, soundtrack, and lighting coordination</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => onRequestCustomQuote('Professional Dance Troupe Booking')}
-              className="mt-6 w-full py-3 bg-[#3D6338] hover:bg-[#2F4E2B] text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>Book Dance Troupe</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+            </ScrollReveal>
+          ))}
         </div>
       </div>
     </section>

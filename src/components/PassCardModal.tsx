@@ -94,7 +94,7 @@ export const PassCardModal: React.FC<PassCardModalProps> = ({ booking, onClose }
               <div>
                 <span className="text-[10px] text-[#9E9B92] uppercase block">Location</span>
                 <span className="font-semibold text-[#1E1D1B] block">
-                  Satellite Studio, Ahmedabad
+                  Hanshoura Road, Ahmedabad
                 </span>
               </div>
             </div>
