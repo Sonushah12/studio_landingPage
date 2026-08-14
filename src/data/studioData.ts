@@ -11,6 +11,7 @@ import {
   StudioAmenity,
   FaqItem,
   PricingConfig,
+  VideoShowcaseItem,
 } from '../types';
 
 export const DEFAULT_GENERAL_INFO: StudioGeneralInfo = {
@@ -586,6 +587,42 @@ export const FREQUENT_FAQS: FaqItem[] = [
   },
 ];
 
+export const DEFAULT_VIDEO_SHOWCASES: VideoShowcaseItem[] = [
+  {
+    id: 'vid-1',
+    title: 'Grand Annual Stage Showcase 2026',
+    category: 'Annual Recital',
+    instructor: 'Nitin Oad & Shubham Rajput',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    posterUrl: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=1000&q=80',
+    duration: '3:45',
+    description: 'Electrifying 80-dancer Bollywood & Urban Hip-Hop fusion performance live on stage at Ahmedabad Auditorium.',
+    views: '12.4K views',
+  },
+  {
+    id: 'vid-2',
+    title: 'Street Cypher & Urban Hip-Hop Routine',
+    category: 'Urban Choreography',
+    instructor: 'Shubham Rajput',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    posterUrl: 'https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=1000&q=80',
+    duration: '2:18',
+    description: 'High energy footwork, popping isolation, and house rhythm inside Studio Alpha wooden floor.',
+    views: '8.9K views',
+  },
+  {
+    id: 'vid-3',
+    title: 'Romantic Royal Wedding Sangeet Choreography',
+    category: 'Wedding Special',
+    instructor: 'Nitin Oad',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    posterUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80',
+    duration: '4:10',
+    description: 'Full family grand medley & couple entrance choreographed for luxury Destination Sangeet.',
+    views: '15.1K views',
+  },
+];
+
 export const DEFAULT_PRICING_CONFIG: PricingConfig = {
   baseMonthly2Days: 2200,
   baseMonthly3Days: 3000,
@@ -611,4 +648,5 @@ export const INITIAL_STUDIO_DATA: StudioFullData = {
   testimonials: TESTIMONIALS,
   faqs: FREQUENT_FAQS,
   pricingConfig: DEFAULT_PRICING_CONFIG,
+  videoShowcases: DEFAULT_VIDEO_SHOWCASES,
 };

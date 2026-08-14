@@ -221,6 +221,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </button>
             <button
+              onClick={() => scrollToSection('videos')}
+              className="text-xs font-semibold uppercase tracking-wider text-[#5A5854] hover:text-[#3D6338] transition cursor-pointer flex items-center gap-1"
+            >
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+              Videos
+            </button>
+            <button
               onClick={() => scrollToSection('faq')}
               className="text-xs font-semibold uppercase tracking-wider text-[#5A5854] hover:text-[#3D6338] transition cursor-pointer"
             >

@@ -199,3 +199,53 @@ export const animateElementReveal = (
     }
   );
 };
+
+/**
+ * Staggers children entrance with smooth GSAP flow
+ */
+export const animateStaggeredChildren = (
+  container: HTMLElement | null,
+  childSelector: string,
+  staggerDelay: number = 0.08
+) => {
+  if (!container) return;
+  const elements = container.querySelectorAll(childSelector);
+  if (!elements.length) return;
+
+  return gsap.fromTo(
+    elements,
+    { y: 30, opacity: 0, scale: 0.98 },
+    {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      duration: 0.65,
+      stagger: staggerDelay,
+      ease: 'power3.out',
+    }
+  );
+};
+
+/**
+ * Adds smooth tilt/magnetic hover effect to cards
+ */
+export const applyCardHover = (element: HTMLElement | null) => {
+  if (!element) return;
+  
+  const handleMouseEnter = () => {
+    gsap.to(element, { y: -6, scale: 1.015, duration: 0.3, ease: 'power2.out' });
+  };
+  
+  const handleMouseLeave = () => {
+    gsap.to(element, { y: 0, scale: 1, duration: 0.4, ease: 'power2.out' });
+  };
+
+  element.addEventListener('mouseenter', handleMouseEnter);
+  element.addEventListener('mouseleave', handleMouseLeave);
+
+  return () => {
+    element.removeEventListener('mouseenter', handleMouseEnter);
+    element.removeEventListener('mouseleave', handleMouseLeave);
+  };
+};
+

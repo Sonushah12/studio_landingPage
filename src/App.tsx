@@ -18,6 +18,7 @@ import { PricingCalculator } from './components/PricingCalculator';
 import { InstructorsSection } from './components/InstructorsSection';
 import { StudioTourSection } from './components/StudioTourSection';
 import { WorkshopsSection } from './components/WorkshopsSection';
+import { VideoShowcaseSection } from './components/VideoShowcaseSection';
 import { SpecialServicesSection } from './components/SpecialServicesSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { FaqSection } from './components/FaqSection';
@@ -196,13 +197,16 @@ function MainAppContent() {
         {/* 7. Upcoming Weekend Guest Workshops & Masterclasses */}
         <WorkshopsSection onRSVPWorkshop={handleRSVPWorkshop} />
 
-        {/* 8. Bespoke Wedding Sangeet & Corporate Entertainment */}
+        {/* 8. Studio Video Reels & Recitals Showcase (Google Drive & HD Videos) */}
+        <VideoShowcaseSection />
+
+        {/* 9. Bespoke Wedding Sangeet & Corporate Entertainment */}
         <SpecialServicesSection onRequestCustomQuote={handleCustomQuote} />
 
-        {/* 9. Verified Student & Parent Reviews */}
+        {/* 10. Verified Student & Parent Reviews */}
         <TestimonialsSection />
 
-        {/* 10. Frequently Asked Questions & Quick Message Desk */}
+        {/* 11. Frequently Asked Questions & Quick Message Desk */}
         <FaqSection
           onOpenAdvisor={() => setIsAdvisorOpen(true)}
           onOpenTrialModal={() => handleOpenTrialModal()}

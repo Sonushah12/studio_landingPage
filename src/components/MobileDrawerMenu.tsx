@@ -18,6 +18,7 @@ import {
   Bot,
   Instagram,
   Music,
+  Film,
 } from 'lucide-react';
 import { useStudioData } from '../context/StudioDataContext';
 import { animateDrawerIn, animateDrawerOut } from '../utils/gsapAnimations';
@@ -128,6 +129,13 @@ export const MobileDrawerMenu: React.FC<MobileDrawerMenuProps> = ({
       icon: Heart,
       badge: 'Bespoke',
       badgeColor: 'bg-rose-100 text-rose-700',
+    },
+    {
+      label: 'Video Reels & Recitals',
+      sectionId: 'videos',
+      icon: Film,
+      badge: 'HD Video',
+      badgeColor: 'bg-emerald-100 text-emerald-800',
     },
     {
       label: 'FAQs & Admissions Desk',

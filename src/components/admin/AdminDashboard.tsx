@@ -28,11 +28,14 @@ import {
   Mail,
   MapPin,
   X,
-  AlertCircle
+  AlertCircle,
+  Film,
+  Menu,
 } from 'lucide-react';
 import { useStudioData } from '../../context/StudioDataContext';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { ImageHelper } from './ImageHelper';
+import { VideoHelper } from './VideoHelper';
 import { SafeImage } from '../SafeImage';
 import {
   DanceClass,
@@ -43,6 +46,7 @@ import {
   StudioAmenity,
   Testimonial,
   FaqItem,
+  VideoShowcaseItem,
 } from '../../types';
 
 interface AdminDashboardProps {
@@ -60,6 +64,7 @@ type TabType =
   | 'specialServices'
   | 'amenities'
   | 'testimonials'
+  | 'videos'
   | 'faqs'
   | 'security';
 
@@ -93,6 +98,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
     addFaq,
     updateFaq,
     deleteFaq,
+    addVideoShowcase,
+    updateVideoShowcase,
+    deleteVideoShowcase,
     resetToFactoryDefaults,
     importBackupData,
     exportBackupData,
@@ -130,6 +138,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
 
   const [editingFaq, setEditingFaq] = useState<FaqItem | null>(null);
   const [isAddingFaq, setIsAddingFaq] = useState(false);
+
+  const [editingVideo, setEditingVideo] = useState<VideoShowcaseItem | null>(null);
+  const [isAddingVideo, setIsAddingVideo] = useState(false);
 
   const [editingAmenity, setEditingAmenity] = useState<StudioAmenity | null>(null);
   const [editingSpecialService, setEditingSpecialService] = useState<SpecialService | null>(null);
@@ -223,6 +234,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
     { id: 'specialServices', label: 'Wedding & Events', icon: HeartHandshake, count: data.specialServices.length },
     { id: 'amenities', label: 'Studio Tour', icon: ShieldCheck, count: data.amenities.length },
     { id: 'testimonials', label: 'Testimonials', icon: MessageSquare, count: data.testimonials.length },
+    { id: 'videos', label: 'Studio Videos & Reels', icon: Film, count: (data.videoShowcases || []).length },
     { id: 'faqs', label: 'FAQs & Desk', icon: HelpCircle, count: data.faqs.length },
     { id: 'security', label: 'Security & Auth', icon: KeyRound, badge: 'Passcode' },
   ];
@@ -231,101 +243,116 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
     <div className="min-h-screen bg-[#F7F5F0] text-[#1E1D1B] flex flex-col font-sans">
       {/* Top Navigation Bar */}
       <header className="bg-[#1E1D1B] text-white border-b border-[#3D6338]/40 sticky top-0 z-40 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#3D6338] text-white flex items-center justify-center font-display font-bold text-lg shadow-sm">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+          {/* Logo & CMS Brand */}
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#3D6338] text-white flex items-center justify-center font-display font-bold text-base sm:text-lg shadow-sm">
               M
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-bold text-base sm:text-lg tracking-tight">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="font-display font-bold text-sm sm:text-base md:text-lg tracking-tight truncate">
                   Merrick Studio CMS
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#3D6338] text-[#D8E8D4] text-[10px] font-bold uppercase tracking-wider">
-                  Live Sync
+                <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-[#3D6338] text-[#D8E8D4] text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hidden xs:inline-block">
+                  Live
                 </span>
               </div>
-              <p className="text-[10px] text-[#9E9B92] hidden sm:block">
-                All changes instantly sync to public website on Hanshoura Road
+              <p className="text-[10px] text-[#9E9B92] hidden md:block">
+                All changes sync directly to public website on Hanshoura Road
               </p>
             </div>
           </div>
 
-          {/* Quick Header Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {lastSavedAt && (
-              <span className="text-[11px] text-[#B5CAB0] hidden md:flex items-center gap-1">
-                <Check className="w-3.5 h-3.5 text-[#7A9E74]" />
-                <span>Auto-saved</span>
-              </span>
-            )}
-
-            <button
-              onClick={handleSaveAllChanges}
-              className="px-3.5 sm:px-4 py-2 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md hover:scale-105 active:scale-95"
-              title="Save all changes to live website"
-            >
-              {isSaving ? (
-                <>
-                  <Check className="w-4 h-4 text-white" />
-                  <span>Saved!</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4 text-white" />
-                  <span>Save Changes</span>
-                </>
-              )}
-            </button>
-
+          {/* Quick Header Actions: View Live Site, Import, Export, Reset, Logout */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* View Live Site */}
             <button
               onClick={onBackToSite}
-              className="px-3.5 py-2 bg-[#3D6338] hover:bg-[#2F4E2B] text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+              className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-[#3D6338] hover:bg-[#2F4E2B] text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
               title="View Public Live Website"
             >
               <Eye className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">View Live Site</span>
             </button>
 
-            <button
-              onClick={handleExport}
-              className="p-2 bg-white/10 hover:bg-white/20 text-[#D8E8D4] rounded-xl transition cursor-pointer"
-              title="Download JSON Backup"
-            >
-              <Download className="w-4 h-4" />
-            </button>
-
+            {/* Import JSON */}
             <label
-              className="p-2 bg-white/10 hover:bg-white/20 text-[#D8E8D4] rounded-xl transition cursor-pointer"
+              className="px-2 sm:px-2.5 py-1.5 sm:py-2 bg-white/10 hover:bg-white/20 text-[#D8E8D4] hover:text-white text-xs font-medium rounded-xl transition flex items-center gap-1 cursor-pointer"
               title="Import JSON Backup"
             >
-              <Upload className="w-4 h-4" />
+              <Upload className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Import</span>
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
             </label>
 
+            {/* Export JSON */}
             <button
-              onClick={handleReset}
-              className="p-2 bg-white/10 hover:bg-rose-600/40 text-[#D8E8D4] rounded-xl transition cursor-pointer"
-              title="Reset to Factory Defaults"
+              onClick={handleExport}
+              className="px-2 sm:px-2.5 py-1.5 sm:py-2 bg-white/10 hover:bg-white/20 text-[#D8E8D4] hover:text-white text-xs font-medium rounded-xl transition flex items-center gap-1 cursor-pointer"
+              title="Download JSON Backup"
             >
-              <RotateCcw className="w-4 h-4" />
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Export</span>
             </button>
 
+            {/* Reset Defaults */}
+            <button
+              onClick={handleReset}
+              className="p-1.5 sm:p-2 bg-white/10 hover:bg-rose-600/40 text-[#D8E8D4] hover:text-white rounded-xl transition cursor-pointer"
+              title="Reset to Factory Defaults"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Logout */}
             <button
               onClick={logout}
-              className="p-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl transition cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 sm:py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
               title="Logout from Admin"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
+        </div>
+
+        {/* Mobile Horizontal Navigation Tabs (Mobile Only) */}
+        <div className="lg:hidden bg-[#161514] border-t border-white/10 px-3 py-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as TabType)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition cursor-pointer flex-shrink-0 ${
+                  isActive
+                    ? 'bg-[#3D6338] text-white shadow-xs'
+                    : 'text-[#B5CAB0] hover:bg-white/5'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#7A9E74]'}`} />
+                <span>{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded-full ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-white/10 text-[#D8E8D4]'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </header>
 
       {/* Main Admin Body */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full flex flex-col lg:flex-row gap-8">
-        {/* Left Sidebar Navigation */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
+        {/* Left Sidebar Navigation (Desktop) */}
+        <aside className="hidden lg:block w-64 flex-shrink-0">
           <div className="bg-white rounded-3xl p-3 border border-[#D9D7D0] shadow-sm space-y-1 sticky top-24">
             <div className="px-3 py-2 text-[10px] uppercase font-bold text-[#9E9B92] tracking-wider">
               Website Content Modules
@@ -1637,7 +1664,132 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
             </div>
           )}
 
-          {/* TAB 11: FAQS & HELPDESK */}
+          {/* TAB 11: STUDIO VIDEOS & REELS (GOOGLE DRIVE & HD VIDEOS) */}
+          {activeTab === 'videos' && (
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-sm space-y-6 animate-in fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#EFEDE7] pb-4 gap-4">
+                <div>
+                  <h2 className="font-display font-bold text-2xl text-[#1E1D1B] flex items-center gap-2">
+                    <Film className="w-6 h-6 text-[#3D6338]" />
+                    Studio Videos &amp; Reels ({(data.videoShowcases || []).length})
+                  </h2>
+                  <p className="text-xs text-[#5A5854] mt-0.5">
+                    Add &amp; manage choreography reels and recital videos with Google Drive video links, YouTube, Vimeo, or direct MP4s.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleSaveAllChanges}
+                    className="px-4 py-2.5 bg-[#3D6338] hover:bg-[#2F4E2B] text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Save Videos</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const newVideo: VideoShowcaseItem = {
+                        id: `vid-${Date.now()}`,
+                        title: 'New Choreography Reel',
+                        category: 'Urban Choreography',
+                        instructor: 'Nitin Sharma',
+                        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                        posterUrl: 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1200&q=80',
+                        duration: '3:20',
+                        description: 'High-energy master routine filmed at Merrick Studio Ahmedabad.',
+                      };
+                      addVideoShowcase(newVideo);
+                      setEditingVideo(newVideo);
+                      showToast('New video showcase added! Configure details below.');
+                    }}
+                    className="px-4 py-2.5 bg-[#1E1D1B] hover:bg-black text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Video</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Video List Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {(data.videoShowcases || []).map((video) => (
+                  <div
+                    key={video.id}
+                    className="p-4 bg-[#F7F5F0] rounded-2xl border border-[#D9D7D0] space-y-3 relative group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-24 h-16 rounded-xl overflow-hidden bg-black/20 flex-shrink-0 relative border border-[#D9D7D0]">
+                        {video.posterUrl ? (
+                          <SafeImage
+                            src={video.posterUrl}
+                            alt={video.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-[#1E1D1B] text-[#D8E8D4]">
+                            <Film className="w-6 h-6" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <Film className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-[#D8E8D4] text-[#3D6338] rounded-full truncate">
+                            {video.category}
+                          </span>
+                          {video.duration && (
+                            <span className="text-[10px] text-[#5A5854] font-medium">
+                              {video.duration}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-display font-bold text-sm text-[#1E1D1B] truncate">
+                          {video.title}
+                        </h4>
+                        <p className="text-[11px] text-[#5A5854] truncate">
+                          By {video.instructor || 'Merrick Faculty'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] text-[#5A5854] font-mono bg-white px-2.5 py-1 rounded-lg border border-[#D9D7D0] truncate">
+                      {video.videoUrl}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-[#EFEDE7]">
+                      <span className="text-[10px] text-[#9E9B92]">
+                        {video.videoUrl.includes('drive.google.com') ? '📁 Google Drive Video' : '🎬 Streaming Video'}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => setEditingVideo(video)}
+                          className="p-1.5 text-[#3D6338] hover:bg-[#D8E8D4] rounded-lg transition cursor-pointer flex items-center gap-1 text-xs font-semibold"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            deleteVideoShowcase(video.id);
+                            showToast('Video removed from showcase.');
+                          }}
+                          className="p-1.5 text-rose-500 hover:bg-rose-100 rounded-lg transition cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 12: FAQS & HELPDESK */}
           {activeTab === 'faqs' && (
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-sm space-y-6 animate-in fade-in">
               <div className="flex items-center justify-between border-b border-[#EFEDE7] pb-4">
@@ -1799,51 +1951,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
               </div>
             </div>
           )}
-
-          {/* Sticky Bottom Save Action Bar */}
-          <div className="sticky bottom-5 z-30 mt-6 bg-[#1E1D1B] text-white p-4 rounded-3xl shadow-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="w-3 h-3 rounded-full bg-[#25D366] animate-pulse" />
-              <div>
-                <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span>Merrick CMS Control</span>
-                  <span className="text-[10px] text-[#B5CAB0] font-normal">· Instant Live Sync</span>
-                </div>
-                <div className="text-[11px] text-[#9E9B92]">
-                  Click Save Changes to write all modifications and publish to live website.
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={handleSaveAllChanges}
-                className="flex-1 sm:flex-initial px-5 py-2.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {isSaving ? (
-                  <>
-                    <Check className="w-4 h-4 text-white animate-bounce" />
-                    <span>Saved to Live Site!</span>
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 text-white" />
-                    <span>Save Changes</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={onBackToSite}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-[#D8E8D4] text-xs font-semibold rounded-2xl transition flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>View Live Site</span>
-              </button>
-            </div>
-          </div>
         </main>
       </div>
 
@@ -2770,6 +2877,123 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToSite }) 
                 className="px-5 py-2.5 bg-[#3D6338] hover:bg-[#2F4E2B] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm cursor-pointer"
               >
                 Save FAQ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EDITING DIALOG: VIDEO SHOWCASE */}
+      {editingVideo && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-[#D9D7D0] max-w-2xl w-full p-6 sm:p-8 space-y-4 animate-in zoom-in-95 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-[#EFEDE7] pb-3">
+              <h3 className="font-display font-bold text-xl text-[#1E1D1B] flex items-center gap-2">
+                <Film className="w-5 h-5 text-[#3D6338]" />
+                <span>Edit Video Reel: {editingVideo.title}</span>
+              </h3>
+              <button
+                onClick={() => setEditingVideo(null)}
+                className="p-1.5 text-[#5A5854] hover:text-[#1E1D1B] cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* Google Drive / YouTube Video URL */}
+              <VideoHelper
+                label="Video URL (Google Drive Share Link, YouTube, Vimeo, or MP4)"
+                value={editingVideo.videoUrl}
+                onChange={(url) => setEditingVideo({ ...editingVideo, videoUrl: url })}
+              />
+
+              {/* Poster Image URL */}
+              <ImageHelper
+                label="Video Poster / Thumbnail Image URL (Google Drive or Web Image)"
+                value={editingVideo.posterUrl || ''}
+                onChange={(url) => setEditingVideo({ ...editingVideo, posterUrl: url })}
+              />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-[#5A5854] block mb-1">Video Title</label>
+                  <input
+                    type="text"
+                    value={editingVideo.title}
+                    onChange={(e) => setEditingVideo({ ...editingVideo, title: e.target.value })}
+                    placeholder="e.g. Annual Stage Recital 2024"
+                    className="w-full px-3.5 py-2 bg-[#F7F5F0] rounded-xl border border-[#D9D7D0] outline-none font-semibold"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-bold text-[#5A5854] block mb-1">Category / Tag</label>
+                  <input
+                    type="text"
+                    value={editingVideo.category}
+                    onChange={(e) => setEditingVideo({ ...editingVideo, category: e.target.value })}
+                    placeholder="e.g. Urban Choreography, Bollywood Fusion, Recital"
+                    className="w-full px-3.5 py-2 bg-[#F7F5F0] rounded-xl border border-[#D9D7D0] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-[#5A5854] block mb-1">Lead Choreographer / Instructor</label>
+                  <input
+                    type="text"
+                    value={editingVideo.instructor || ''}
+                    onChange={(e) => setEditingVideo({ ...editingVideo, instructor: e.target.value })}
+                    placeholder="e.g. Nitin Sharma"
+                    className="w-full px-3.5 py-2 bg-[#F7F5F0] rounded-xl border border-[#D9D7D0] outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-bold text-[#5A5854] block mb-1">Video Duration</label>
+                  <input
+                    type="text"
+                    value={editingVideo.duration || ''}
+                    onChange={(e) => setEditingVideo({ ...editingVideo, duration: e.target.value })}
+                    placeholder="e.g. 3:45 or 4:10"
+                    className="w-full px-3.5 py-2 bg-[#F7F5F0] rounded-xl border border-[#D9D7D0] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-[#5A5854] block mb-1">Video Description</label>
+                <textarea
+                  rows={3}
+                  value={editingVideo.description || ''}
+                  onChange={(e) => setEditingVideo({ ...editingVideo, description: e.target.value })}
+                  placeholder="Describe the choreography routine, music track, or performance setting..."
+                  className="w-full px-3.5 py-2 bg-[#F7F5F0] rounded-xl border border-[#D9D7D0] outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#EFEDE7]">
+              <button
+                type="button"
+                onClick={() => setEditingVideo(null)}
+                className="px-4 py-2 text-xs font-semibold text-[#5A5854] hover:bg-[#F7F5F0] rounded-xl cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  updateVideoShowcase(editingVideo.id, editingVideo);
+                  setEditingVideo(null);
+                  showToast('Video reel updated and saved to live site!');
+                }}
+                className="px-5 py-2.5 bg-[#3D6338] hover:bg-[#2F4E2B] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-sm cursor-pointer active:scale-95 flex items-center gap-1.5"
+              >
+                <Save className="w-4 h-4" />
+                <span>Save Video Reel</span>
               </button>
             </div>
           </div>
