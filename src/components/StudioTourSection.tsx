@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ShieldCheck, Maximize2, Volume2, Wind, Sparkles, Lock, CheckCircle2, Layers } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
+import { performFlipTransition } from '../utils/gsapAnimations';
 
 export const StudioTourSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alpha' | 'beta' | 'flooring' | 'lounge'>('alpha');
+  const spaceCardRef = useRef<HTMLDivElement>(null);
   const { data } = useStudioData();
   const { generalInfo } = data;
   const amenitiesList = data.amenities || [];
@@ -68,6 +70,17 @@ export const StudioTourSection: React.FC = () => {
     }
   };
 
+  const handleTabChange = (tabId: typeof activeTab) => {
+    if (tabId === activeTab) return;
+    performFlipTransition(
+      spaceCardRef.current,
+      () => {
+        setActiveTab(tabId);
+      },
+      { duration: 0.45, ease: 'power3.out' }
+    );
+  };
+
   const current = spaces[activeTab];
 
   return (
@@ -97,7 +110,7 @@ export const StudioTourSection: React.FC = () => {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                  onClick={() => handleTabChange(tab.id as typeof activeTab)}
                   className={`px-4 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeTab === tab.id
                       ? 'bg-[#3D6338] text-white shadow-md scale-105'
@@ -111,9 +124,9 @@ export const StudioTourSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Feature Display Area */}
+        {/* Feature Display Area with GSAP Flip */}
         <ScrollReveal animation="fade-up" delay={120} duration={700}>
-          <div className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+          <div ref={spaceCardRef} className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
             {/* Image Side */}
             <div className="lg:col-span-7 relative min-h-[320px] sm:min-h-[420px] bg-[#2C2B29] overflow-hidden group">
               <SafeImage

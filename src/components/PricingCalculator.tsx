@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Check, Gift, ArrowRight, Tag } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { useStudioData } from '../context/StudioDataContext';
+import { performFlipTransition } from '../utils/gsapAnimations';
 
 interface PricingCalculatorProps {
   onOpenTrialModal: () => void;
@@ -13,6 +14,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
   const [includeRecitalPass, setIncludeRecitalPass] = useState<boolean>(true);
   const [includePrivateCoaching, setIncludePrivateCoaching] = useState<boolean>(false);
   const [isSiblingDiscount, setIsSiblingDiscount] = useState<boolean>(false);
+  const summaryCardRef = useRef<HTMLDivElement>(null);
 
   const { data } = useStudioData();
   const pricing = data.pricingConfig || {
@@ -24,6 +26,28 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
     recitalPassFee: 1500,
     privateCoachingSessionFee: 1800,
     siblingDiscountPercent: 10,
+  };
+
+  const handleCycleChange = (cycle: 'monthly' | 'quarterly' | 'annual') => {
+    if (cycle === billingCycle) return;
+    performFlipTransition(
+      summaryCardRef.current,
+      () => {
+        setBillingCycle(cycle);
+      },
+      { duration: 0.4, ease: 'power3.out' }
+    );
+  };
+
+  const handleFrequencyChange = (freq: number) => {
+    if (freq === classesPerWeek) return;
+    performFlipTransition(
+      summaryCardRef.current,
+      () => {
+        setClassesPerWeek(freq);
+      },
+      { duration: 0.4, ease: 'power3.out' }
+    );
   };
 
   // Base monthly pricing
@@ -76,7 +100,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
             {/* Billing Cycle Pill Switcher */}
             <div className="inline-flex items-center gap-1 bg-[#EFEDE7] p-1.5 rounded-full border border-[#D9D7D0] mt-8">
               <button
-                onClick={() => setBillingCycle('monthly')}
+                onClick={() => handleCycleChange('monthly')}
                 className={`px-5 py-2 rounded-full text-xs font-semibold transition cursor-pointer ${
                   billingCycle === 'monthly'
                     ? 'bg-[#3D6338] text-white shadow-sm'
@@ -86,7 +110,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
                 Monthly
               </button>
               <button
-                onClick={() => setBillingCycle('quarterly')}
+                onClick={() => handleCycleChange('quarterly')}
                 className={`px-5 py-2 rounded-full text-xs font-semibold transition cursor-pointer relative ${
                   billingCycle === 'quarterly'
                     ? 'bg-[#3D6338] text-white shadow-sm'
@@ -99,7 +123,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
                 </span>
               </button>
               <button
-                onClick={() => setBillingCycle('annual')}
+                onClick={() => handleCycleChange('annual')}
                 className={`px-5 py-2 rounded-full text-xs font-semibold transition cursor-pointer relative ${
                   billingCycle === 'annual'
                     ? 'bg-[#3D6338] text-white shadow-sm'
@@ -134,7 +158,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
                     ].map((item) => (
                       <button
                         key={item.days}
-                        onClick={() => setClassesPerWeek(item.days)}
+                        onClick={() => handleFrequencyChange(item.days)}
                         className={`p-4 rounded-2xl text-left border transition-all cursor-pointer ${
                           classesPerWeek === item.days
                             ? 'bg-[#D8E8D4]/40 border-[#3D6338] shadow-sm'
@@ -252,7 +276,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onOpenTria
           {/* Right Column: Dynamic Price Summary Card with fade-left */}
           <div className="lg:col-span-5">
             <ScrollReveal animation="fade-left" delay={200} duration={700}>
-              <div className="bg-gradient-to-b from-[#1E1D1B] to-[#2C2B29] text-white p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
+              <div ref={summaryCardRef} className="bg-gradient-to-b from-[#1E1D1B] to-[#2C2B29] text-white p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
                 <div className="flex items-center justify-between border-b border-[#5A5854] pb-4">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-[#B5CAB0] tracking-widest block">

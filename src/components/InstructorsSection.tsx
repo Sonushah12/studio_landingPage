@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Award, Quote, Star, ChevronRight, Zap, Flame } from 'lucide-react';
 import { Instructor } from '../types';
 import { ScrollReveal } from './ScrollReveal';
 import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
+import { performFlipTransition } from '../utils/gsapAnimations';
 
 interface InstructorsSectionProps {
   onBookWithInstructor: (instructorName: string) => void;
@@ -15,6 +16,7 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
   const instructorsList = data.instructors || [];
   const [selectedInstructor, setSelectedInstructor] = useState<Instructor>(instructorsList[0]);
   const [viewMode, setViewMode] = useState<'portrait' | 'action'>('portrait');
+  const spotlightCardRef = useRef<HTMLDivElement>(null);
 
   const currentAddress =
     generalInfo.address ||
@@ -30,6 +32,28 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
   }, [instructorsList]);
 
   if (!instructorsList.length || !selectedInstructor) return null;
+
+  const handleSelectInstructor = (instructor: Instructor) => {
+    if (instructor.id === selectedInstructor.id) return;
+    performFlipTransition(
+      spotlightCardRef.current,
+      () => {
+        setSelectedInstructor(instructor);
+      },
+      { duration: 0.45, ease: 'power3.out' }
+    );
+  };
+
+  const handleToggleViewMode = (mode: 'portrait' | 'action') => {
+    if (mode === viewMode) return;
+    performFlipTransition(
+      spotlightCardRef.current,
+      () => {
+        setViewMode(mode);
+      },
+      { duration: 0.35, ease: 'power2.out' }
+    );
+  };
 
   return (
     <section id="instructors" className="py-20 bg-[#EFEDE7] border-t border-[#D9D7D0] relative">
@@ -65,7 +89,7 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
                   duration={650}
                 >
                   <div
-                    onClick={() => setSelectedInstructor(instructor)}
+                    onClick={() => handleSelectInstructor(instructor)}
                     className={`p-5 rounded-3xl border transition-all duration-300 cursor-pointer flex items-center justify-between group ${
                       isSelected
                         ? 'bg-white border-[#3D6338] shadow-xl ring-2 ring-[#3D6338]/20 scale-[1.02]'
@@ -136,7 +160,7 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
           {/* Right Column: Deep-dive Spotlight Card with fade-left */}
           <div className="lg:col-span-7">
             <ScrollReveal animation="fade-left" delay={150} duration={750}>
-              <div className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden">
+              <div ref={spotlightCardRef} className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden">
                 {/* Visual Photo Header & Switcher */}
                 <div className="relative aspect-[16/9] sm:aspect-[21/9] bg-[#1E1D1B] overflow-hidden group">
                   <SafeImage
@@ -149,7 +173,7 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
                   {/* View Mode Toggle Buttons */}
                   <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/20">
                     <button
-                      onClick={() => setViewMode('portrait')}
+                      onClick={() => handleToggleViewMode('portrait')}
                       className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
                         viewMode === 'portrait'
                           ? 'bg-white text-[#1E1D1B] shadow-sm'
@@ -159,7 +183,7 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
                       Portrait
                     </button>
                     <button
-                      onClick={() => setViewMode('action')}
+                      onClick={() => handleToggleViewMode('action')}
                       className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
                         viewMode === 'action'
                           ? 'bg-[#3D6338] text-white shadow-sm'

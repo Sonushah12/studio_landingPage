@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Play, Sparkles, Film, Eye, Users, ChevronRight, HardDrive } from 'lucide-react';
 import { useStudioData } from '../context/StudioDataContext';
 import { ScrollReveal } from './ScrollReveal';
 import { SafeImage } from './SafeImage';
 import { VideoModal } from './VideoModal';
 import { isGoogleDriveUrl } from '../utils/imageUtils';
+import { performFlipTransition } from '../utils/gsapAnimations';
 
 export const VideoShowcaseSection: React.FC = () => {
   const { data } = useStudioData();
@@ -13,14 +14,26 @@ export const VideoShowcaseSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const videoGridRef = useRef<HTMLDivElement>(null);
 
   if (!showcases || showcases.length === 0) return null;
 
-  const categories = ['All', ...Array.from(new Set(showcases.map((s) => s.category)))];
+  const categories: string[] = ['All', ...Array.from(new Set<string>(showcases.map((s) => s.category)))];
 
   const filtered = selectedCategory === 'All'
     ? showcases
     : showcases.filter((s) => s.category === selectedCategory);
+
+  const handleCategoryChange = (newCat: string) => {
+    if (newCat === selectedCategory) return;
+    performFlipTransition(
+      videoGridRef.current,
+      () => {
+        setSelectedCategory(newCat);
+      },
+      { duration: 0.45, stagger: 0.03, ease: 'power3.out' }
+    );
+  };
 
   const openVideoAtIndex = (idx: number) => {
     setCurrentVideoIndex(idx);
@@ -56,7 +69,7 @@ export const VideoShowcaseSection: React.FC = () => {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => handleCategoryChange(cat)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-[#3D6338] text-white shadow-lg shadow-[#3D6338]/30 scale-105'
@@ -70,13 +83,12 @@ export const VideoShowcaseSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Video Cards Grid with GSAP Stagger */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Video Cards Grid with GSAP Flip */}
+        <div ref={videoGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((item, idx) => (
-            <ScrollReveal
+            <div
               key={item.id}
-              animation="zoom-in"
-              delay={idx * 100}
+              data-flip-id={item.id}
               className="h-full"
             >
               <div
@@ -141,7 +153,7 @@ export const VideoShowcaseSection: React.FC = () => {
                   </span>
                 </div>
               </div>
-            </ScrollReveal>
+            </div>
           ))}
         </div>
       </div>

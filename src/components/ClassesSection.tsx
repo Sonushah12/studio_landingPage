@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Volume2, Sparkles, Calendar, Users, ArrowRight, Check, Info, UserCheck } from 'lucide-react';
 import { DanceClass } from '../types';
 import { rhythmSynth } from '../utils/audioSynth';
 import { ScrollReveal } from './ScrollReveal';
 import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
+import { performFlipTransition } from '../utils/gsapAnimations';
 
 interface ClassesSectionProps {
   onSelectClassDetail: (danceClass: DanceClass) => void;
@@ -17,6 +18,7 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activePlayingGenre, setActivePlayingGenre] = useState<string | null>(null);
+  const gridContainerRef = useRef<HTMLDivElement>(null);
   const { data } = useStudioData();
   const classesList = data.classes || [];
 
@@ -34,6 +36,17 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
     activeCategory === 'all'
       ? classesList
       : classesList.filter((c) => c.category === activeCategory);
+
+  const handleCategoryChange = (newCategory: string) => {
+    if (newCategory === activeCategory) return;
+    performFlipTransition(
+      gridContainerRef.current,
+      () => {
+        setActiveCategory(newCategory);
+      },
+      { duration: 0.45, stagger: 0.03, ease: 'power3.out' }
+    );
+  };
 
   const handleToggleSound = (genre: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,12 +78,12 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
               From high-energy Bollywood commercial routines and street urban isolations to sensual Latin partnering, fluid contemporary, and playful kids movement.
             </p>
 
-            {/* Category Filter Pills */}
+            {/* Category Filter Pills with GSAP Flip */}
             <div className="flex items-center justify-center gap-2 flex-wrap mt-8">
               {categories.map((cat) => (
                 <button
                   key={cat.key}
-                  onClick={() => setActiveCategory(cat.key)}
+                  onClick={() => handleCategoryChange(cat.key)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                     activeCategory === cat.key
                       ? 'bg-[#3D6338] text-white shadow-md scale-105'
@@ -84,17 +97,15 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
           </div>
         </ScrollReveal>
 
-        {/* Classes Cards Grid with Staggered Entrance */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Classes Cards Grid with GSAP Flip Animation */}
+        <div ref={gridContainerRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredClasses.map((item, idx) => {
             const isPlaying = activePlayingGenre === item.soundRhythmType;
 
             return (
-              <ScrollReveal
+              <div
                 key={item.id}
-                animation="fade-up"
-                delay={idx * 90}
-                duration={700}
+                data-flip-id={item.id}
                 className="h-full"
               >
                 <div className="bg-white rounded-3xl border border-[#D9D7D0] hover:border-[#7A9E74] shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between overflow-hidden group hover:-translate-y-1.5 h-full">
@@ -209,7 +220,7 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
                     </button>
                   </div>
                 </div>
-              </ScrollReveal>
+              </div>
             );
           })}
         </div>

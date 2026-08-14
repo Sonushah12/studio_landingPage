@@ -1,8 +1,111 @@
 import gsap from 'gsap';
+import { Flip } from 'gsap/Flip';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins safely
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(Flip, ScrollTrigger);
+}
 
 /**
  * GSAP Animation Utilities for Merrick Dance Studio
  */
+
+export { Flip, ScrollTrigger };
+
+/**
+ * Performs a high-performance GSAP Flip transition on any container or target elements.
+ * Ideal for category tab switching, item reordering, and filter updates.
+ */
+export const performFlipTransition = (
+  container: HTMLElement | null,
+  updateStateCallback: () => void,
+  options?: {
+    duration?: number;
+    stagger?: number;
+    ease?: string;
+    targets?: any;
+    onComplete?: () => void;
+  }
+) => {
+  if (!container && !options?.targets) {
+    updateStateCallback();
+    return;
+  }
+
+  try {
+    const targets = options?.targets || container;
+    const state = Flip.getState(targets as any);
+
+    // Apply the React state / DOM mutation
+    updateStateCallback();
+
+    // Request animation frame to ensure DOM is updated before Flip calculates delta
+    requestAnimationFrame(() => {
+      Flip.from(state, {
+        duration: options?.duration ?? 0.45,
+        ease: options?.ease ?? 'power3.out',
+        stagger: options?.stagger ?? 0.03,
+        absolute: false,
+        fade: true,
+        simple: true,
+        onComplete: options?.onComplete,
+      });
+    });
+  } catch (err) {
+    // Graceful fallback if Flip fails in any edge case
+    updateStateCallback();
+  }
+};
+
+/**
+ * Smooth Section-to-Section Transition Animation
+ * Creates a fluid, cinematic entry for each major landing page section
+ */
+export const animateSectionTransition = (sectionEl: HTMLElement | null) => {
+  if (!sectionEl || typeof window === 'undefined') return;
+
+  const header = sectionEl.querySelector('.gsap-section-header');
+  const content = sectionEl.querySelectorAll('.gsap-section-content');
+  const cards = sectionEl.querySelectorAll('.gsap-card-item');
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: sectionEl,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    },
+    defaults: { ease: 'power3.out' },
+  });
+
+  if (header) {
+    tl.fromTo(
+      header,
+      { y: 35, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.75 }
+    );
+  }
+
+  if (content.length) {
+    tl.fromTo(
+      content,
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.65, stagger: 0.08 },
+      header ? '-=0.4' : '0'
+    );
+  }
+
+  if (cards.length) {
+    tl.fromTo(
+      cards,
+      { y: 30, opacity: 0, scale: 0.98 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.06 },
+      '-=0.35'
+    );
+  }
+
+  return tl;
+};
 
 export const animateHeroEntrance = (container: HTMLElement | null) => {
   if (!container) return;
