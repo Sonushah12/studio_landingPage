@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Calendar, Volume2, VolumeX, ArrowRight, Award, Users, Music, CheckCircle2, Play, Pause, Flame, Heart } from 'lucide-react';
 import { rhythmSynth } from '../utils/audioSynth';
 import { useStudioData } from '../context/StudioDataContext';
-import { animateHeroEntrance } from '../utils/gsapAnimations';
+import { animateHeroEntrance, setupHeroParallax } from '../utils/gsapAnimations';
 import { SafeImage } from './SafeImage';
 
 interface HeroProps {
@@ -37,8 +37,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
   useEffect(() => {
     // GSAP entrance animation
     const tl = animateHeroEntrance(containerRef.current);
+    // GSAP ScrollTrigger Parallax for background blobs, media, and floating badges
+    const cleanupParallax = setupHeroParallax(containerRef.current);
+
     return () => {
       tl?.kill();
+      cleanupParallax?.();
     };
   }, []);
 
@@ -71,10 +75,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
       ref={containerRef}
       className="relative min-h-[92vh] bg-[#F7F5F0] overflow-hidden pt-6 pb-14 lg:py-16 flex flex-col justify-center"
     >
-      {/* Background Animated Gradient Blobs */}
-      <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] rounded-full bg-[#D8E8D4]/60 blur-3xl pointer-events-none animate-pulse-subtle -z-10" />
-      <div className="absolute top-1/2 -left-36 w-96 h-96 rounded-full bg-[#B5CAB0]/40 blur-3xl pointer-events-none animate-float -z-10" />
-      <div className="absolute bottom-10 right-1/4 w-80 h-80 rounded-full bg-[#E8EAD0]/50 blur-2xl pointer-events-none -z-10" />
+      {/* Background Animated Gradient Blobs with GSAP ScrollTrigger Parallax */}
+      <div className="gsap-hero-blob-1 absolute -top-32 -right-32 w-[30rem] h-[30rem] rounded-full bg-[#D8E8D4]/60 blur-3xl pointer-events-none animate-pulse-subtle -z-10 will-change-transform" />
+      <div className="gsap-hero-blob-2 absolute top-1/2 -left-36 w-96 h-96 rounded-full bg-[#B5CAB0]/40 blur-3xl pointer-events-none animate-float -z-10 will-change-transform" />
+      <div className="gsap-hero-blob-3 absolute bottom-10 right-1/4 w-80 h-80 rounded-full bg-[#E8EAD0]/50 blur-2xl pointer-events-none -z-10 will-change-transform" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Urgent Live Pill */}
@@ -93,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Hero Copy & Actions */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="gsap-hero-text-col lg:col-span-7 space-y-6 will-change-transform">
             <div className="gsap-hero-badge inline-flex items-center gap-2 border-l-4 border-[#3D6338] pl-3 py-0.5">
               <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#3D6338]">
                 Mastery · Passion · Rhythm · Stage
@@ -220,8 +224,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
             </div>
           </div>
 
-          {/* Right Column: Visual Photo Centerpiece with Dynamic Animations */}
-          <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
+          {/* Right Column: Visual Photo Centerpiece with Parallax Depth */}
+          <div className="gsap-hero-image-parallax lg:col-span-5 relative flex flex-col items-center justify-center will-change-transform">
             {/* Visual Container Card */}
             <div className="gsap-hero-image relative w-full max-w-md bg-white rounded-3xl p-3 sm:p-4 border border-[#D9D7D0] shadow-2xl overflow-hidden group">
               {/* Photo Showcase Carousel */}
@@ -312,8 +316,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
               </div>
             </div>
 
-            {/* Floating Review Badge */}
-            <div className="hidden sm:flex absolute -bottom-5 -left-6 bg-white rounded-2xl p-3 border border-[#D9D7D0] shadow-lg items-center gap-3 animate-float">
+            {/* Floating Review Badge with Counter-Parallax */}
+            <div className="gsap-hero-floating-badge hidden sm:flex absolute -bottom-5 -left-6 bg-white rounded-2xl p-3 border border-[#D9D7D0] shadow-lg items-center gap-3 animate-float will-change-transform z-20">
               <div className="flex -space-x-2">
                 <SafeImage
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
@@ -339,8 +343,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
           </div>
         </div>
 
-        {/* Studio Key Stats Strip */}
-        <div className="mt-12 pt-8 border-t border-[#D9D7D0]/70 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+        {/* Studio Key Stats Strip with Scroll Parallax */}
+        <div className="gsap-hero-stats-row mt-12 pt-8 border-t border-[#D9D7D0]/70 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center will-change-transform">
           <div className="gsap-hero-stat p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
             <div className="font-display text-3xl sm:text-4xl font-bold text-[#1E1D1B]">{generalInfo.stats?.yearsOfExcellence || generalInfo.stats?.yearsExp || '12+'}</div>
             <div className="text-xs uppercase tracking-wider font-semibold text-[#3D6338] mt-1">Years of Excellence</div>

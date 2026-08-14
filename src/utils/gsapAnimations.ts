@@ -352,3 +352,232 @@ export const applyCardHover = (element: HTMLElement | null) => {
   };
 };
 
+/**
+ * GSAP ScrollTrigger Parallax effect for Hero section
+ * Gives distinct scrolling speeds to background ambient glows, floating cards, media card, and content
+ */
+export const setupHeroParallax = (container: HTMLElement | null) => {
+  if (!container || typeof window === 'undefined') return () => {};
+
+  const ctx = gsap.context(() => {
+    // 1. Ambient background gradient blobs (move at differentiated slower speeds)
+    const blob1 = container.querySelector('.gsap-hero-blob-1');
+    const blob2 = container.querySelector('.gsap-hero-blob-2');
+    const blob3 = container.querySelector('.gsap-hero-blob-3');
+
+    if (blob1) {
+      gsap.to(blob1, {
+        yPercent: 45,
+        xPercent: -15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      });
+    }
+
+    if (blob2) {
+      gsap.to(blob2, {
+        yPercent: 35,
+        xPercent: 10,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+    }
+
+    if (blob3) {
+      gsap.to(blob3, {
+        yPercent: -30,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      });
+    }
+
+    // 2. Main visual photo card (drifts at a distinct foreground depth)
+    const imageWrapper = container.querySelector('.gsap-hero-image-parallax');
+    if (imageWrapper) {
+      gsap.to(imageWrapper, {
+        yPercent: 14,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.8,
+        },
+      });
+    }
+
+    // 3. Floating review badge (counter-float for multi-plane depth effect)
+    const floatingBadge = container.querySelector('.gsap-hero-floating-badge');
+    if (floatingBadge) {
+      gsap.to(floatingBadge, {
+        y: -35,
+        x: 10,
+        rotate: -3,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.6,
+        },
+      });
+    }
+
+    // 4. Hero text column subtle parallax delay
+    const textCol = container.querySelector('.gsap-hero-text-col');
+    if (textCol) {
+      gsap.to(textCol, {
+        yPercent: 8,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+        },
+      });
+    }
+
+    // 5. Stats bar subtle parallax rise
+    const statsBar = container.querySelector('.gsap-hero-stats-row');
+    if (statsBar) {
+      gsap.fromTo(
+        statsBar,
+        { y: 15 },
+        {
+          y: -15,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: statsBar,
+            start: 'top 95%',
+            end: 'bottom 60%',
+            scrub: 0.8,
+          },
+        }
+      );
+    }
+  }, container);
+
+  return () => ctx.revert();
+};
+
+/**
+ * GSAP ScrollTrigger Parallax effect for Studio Tour section
+ * Creates subtle multi-layered depth across background ambient glows, preview frame, and tech specs
+ */
+export const setupStudioTourParallax = (container: HTMLElement | null) => {
+  if (!container || typeof window === 'undefined') return () => {};
+
+  const ctx = gsap.context(() => {
+    // 1. Ambient background decorative glow blobs
+    const bgGlow = container.querySelector('.gsap-tour-bg-glow');
+    const bgGlow2 = container.querySelector('.gsap-tour-bg-glow-2');
+
+    if (bgGlow) {
+      gsap.to(bgGlow, {
+        yPercent: 35,
+        scale: 1.15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.4,
+        },
+      });
+    }
+
+    if (bgGlow2) {
+      gsap.to(bgGlow2, {
+        yPercent: -30,
+        scale: 1.1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      });
+    }
+
+    // 2. Large showcase card depth
+    const showcaseCard = container.querySelector('.gsap-tour-showcase-card');
+    if (showcaseCard) {
+      gsap.fromTo(
+        showcaseCard,
+        { y: 25 },
+        {
+          y: -25,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 85%',
+            end: 'bottom 15%',
+            scrub: 0.9,
+          },
+        }
+      );
+    }
+
+    // 3. Inner image subtle zoom/shift
+    const innerImage = container.querySelector('.gsap-tour-inner-image');
+    if (innerImage) {
+      gsap.fromTo(
+        innerImage,
+        { scale: 1.02, yPercent: -4 },
+        {
+          scale: 1.12,
+          yPercent: 4,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: showcaseCard || container,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        }
+      );
+    }
+
+    // 4. Amenities cards staggered parallax wave
+    const amenityCards = container.querySelectorAll('.gsap-tour-amenity-card');
+    if (amenityCards.length) {
+      amenityCards.forEach((card, index) => {
+        const offset = (index % 2 === 0 ? 1 : -1) * (10 + (index % 3) * 5);
+        gsap.fromTo(
+          card,
+          { y: offset },
+          {
+            y: -offset,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 95%',
+              end: 'bottom 35%',
+              scrub: 0.8,
+            },
+          }
+        );
+      });
+    }
+  }, container);
+
+  return () => ctx.revert();
+};
+

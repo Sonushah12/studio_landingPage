@@ -1,16 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ShieldCheck, Maximize2, Volume2, Wind, Sparkles, Lock, CheckCircle2, Layers } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
-import { performFlipTransition } from '../utils/gsapAnimations';
+import { performFlipTransition, setupStudioTourParallax } from '../utils/gsapAnimations';
 
 export const StudioTourSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alpha' | 'beta' | 'flooring' | 'lounge'>('alpha');
+  const sectionRef = useRef<HTMLElement>(null);
   const spaceCardRef = useRef<HTMLDivElement>(null);
   const { data } = useStudioData();
   const { generalInfo } = data;
   const amenitiesList = data.amenities || [];
+
+  useEffect(() => {
+    const cleanup = setupStudioTourParallax(sectionRef.current);
+    return () => {
+      cleanup?.();
+    };
+  }, []);
 
   const currentAddress =
     generalInfo.address ||
@@ -84,8 +92,12 @@ export const StudioTourSection: React.FC = () => {
   const current = spaces[activeTab];
 
   return (
-    <section id="about" className="py-20 bg-[#F7F5F0] border-t border-[#D9D7D0] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" ref={sectionRef} className="py-20 bg-[#F7F5F0] border-t border-[#D9D7D0] relative overflow-hidden">
+      {/* Background Ambient Glows with GSAP ScrollTrigger Parallax */}
+      <div className="gsap-tour-bg-glow absolute -top-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-[#D8E8D4]/40 blur-3xl pointer-events-none -z-10 will-change-transform" />
+      <div className="gsap-tour-bg-glow-2 absolute -bottom-36 -left-36 w-[32rem] h-[32rem] rounded-full bg-[#B5CAB0]/30 blur-3xl pointer-events-none -z-10 will-change-transform" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header with Scroll Reveal */}
         <ScrollReveal animation="fade-up" duration={650}>
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -124,24 +136,26 @@ export const StudioTourSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Feature Display Area with GSAP Flip */}
+        {/* Feature Display Area with GSAP Flip & Parallax Depth */}
         <ScrollReveal animation="fade-up" delay={120} duration={700}>
-          <div ref={spaceCardRef} className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+          <div ref={spaceCardRef} className="gsap-tour-showcase-card bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 will-change-transform">
             {/* Image Side */}
             <div className="lg:col-span-7 relative min-h-[320px] sm:min-h-[420px] bg-[#2C2B29] overflow-hidden group">
-              <SafeImage
-                key={activeTab}
-                src={current.image}
-                alt={current.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-              <div className="absolute top-4 left-4">
+              <div className="w-full h-full overflow-hidden">
+                <SafeImage
+                  key={activeTab}
+                  src={current.image}
+                  alt={current.title}
+                  className="gsap-tour-inner-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out will-change-transform"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+              <div className="absolute top-4 left-4 z-10">
                 <span className="px-3 py-1 bg-[#3D6338] text-white text-xs font-bold uppercase rounded-full tracking-wider shadow-sm">
                   {current.badge}
                 </span>
               </div>
-              <div className="absolute bottom-4 left-4 right-4 text-white">
+              <div className="absolute bottom-4 left-4 right-4 text-white z-10">
                 <h3 className="font-display font-bold text-2xl text-white drop-shadow-sm">
                   {current.title}
                 </h3>
@@ -186,7 +200,7 @@ export const StudioTourSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Studio Amenities Grid */}
+        {/* Studio Amenities Grid with Parallax Wave */}
         {amenitiesList.length > 0 && (
           <div className="mt-12 pt-8 border-t border-[#D9D7D0]">
             <div className="text-center mb-6">
@@ -202,7 +216,7 @@ export const StudioTourSection: React.FC = () => {
               {amenitiesList.map((amenity, idx) => (
                 <div
                   key={idx}
-                  className="bg-white p-3.5 rounded-2xl border border-[#D9D7D0] text-center flex flex-col items-center justify-center space-y-1.5 shadow-2xs hover:border-[#7A9E74] transition group"
+                  className="gsap-tour-amenity-card bg-white p-3.5 rounded-2xl border border-[#D9D7D0] text-center flex flex-col items-center justify-center space-y-1.5 shadow-2xs hover:border-[#7A9E74] transition group will-change-transform"
                 >
                   <div className="w-8 h-8 rounded-full bg-[#D8E8D4]/60 text-[#3D6338] flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
                     {amenity.icon || '✓'}
