@@ -3,6 +3,7 @@ import { Volume2, Sparkles, Calendar, Users, ArrowRight, Check, Info, UserCheck 
 import { DanceClass } from '../types';
 import { rhythmSynth } from '../utils/audioSynth';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 interface ClassesSectionProps {
@@ -100,10 +101,9 @@ export const ClassesSection: React.FC<ClassesSectionProps> = ({
                   <div>
                     {/* Photo Header with dynamic overlay */}
                     <div className="relative aspect-[16/10] overflow-hidden bg-[#2C2B29]">
-                      <img
+                      <SafeImage
                         src={item.imageUrl}
                         alt={item.name}
-                        referrerPolicy="no-referrer"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />

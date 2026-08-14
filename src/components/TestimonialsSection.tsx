@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Star, Quote, Heart } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 export const TestimonialsSection: React.FC = () => {
@@ -95,10 +96,9 @@ export const TestimonialsSection: React.FC = () => {
                 <div className="pt-6 mt-4 border-t border-[#EFEDE7] flex items-center justify-between">
                   <div className="flex items-center gap-3.5">
                     {t.avatarImageUrl ? (
-                      <img
+                      <SafeImage
                         src={t.avatarImageUrl}
                         alt={t.name}
-                        referrerPolicy="no-referrer"
                         className="w-12 h-12 rounded-full object-cover shadow-sm border border-[#D9D7D0] flex-shrink-0"
                       />
                     ) : (

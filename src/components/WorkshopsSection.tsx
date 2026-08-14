@@ -2,6 +2,7 @@ import React from 'react';
 import { Calendar, Clock, Flame, ArrowRight, UserCheck } from 'lucide-react';
 import { Workshop } from '../types';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 interface WorkshopsSectionProps {
@@ -10,7 +11,14 @@ interface WorkshopsSectionProps {
 
 export const WorkshopsSection: React.FC<WorkshopsSectionProps> = ({ onRSVPWorkshop }) => {
   const { data } = useStudioData();
+  const { generalInfo } = data;
   const workshopsList = data.workshops || [];
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+  const shortAddress = currentAddress.split(',')[0] || 'Hanshoura Road';
 
   return (
     <section id="workshops" className="py-20 bg-[#EFEDE7] border-t border-[#D9D7D0] relative">
@@ -27,7 +35,7 @@ export const WorkshopsSection: React.FC<WorkshopsSectionProps> = ({ onRSVPWorksh
                 Upcoming Guest Workshops
               </h2>
               <p className="text-[#5A5854] text-sm mt-2 max-w-xl">
-                Immerse yourself in specialized weekend intensives with our senior master choreographers on Hanshoura Road. Open to members and guest dancers.
+                Immerse yourself in specialized weekend intensives with our senior master choreographers at our {shortAddress} studio. Open to members and guest dancers.
               </p>
             </div>
 
@@ -53,10 +61,9 @@ export const WorkshopsSection: React.FC<WorkshopsSectionProps> = ({ onRSVPWorksh
                   <div>
                     {/* Photo Header */}
                     <div className="relative aspect-[16/10] overflow-hidden bg-[#2C2B29]">
-                      <img
+                      <SafeImage
                         src={workshop.imageUrl}
                         alt={workshop.title}
-                        referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />

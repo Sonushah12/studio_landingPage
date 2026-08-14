@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Maximize2, Volume2, Wind, Sparkles, Lock, CheckCircle2, Layers } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 export const StudioTourSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'alpha' | 'beta' | 'flooring' | 'lounge'>('alpha');
   const { data } = useStudioData();
+  const { generalInfo } = data;
   const amenitiesList = data.amenities || [];
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+
+  const shortAddress = currentAddress.split(',')[0] || 'Hanshoura Road';
 
   const spaces = {
     alpha: {
       title: 'Studio Alpha — The Grand Ballroom',
       badge: 'Main Stage & Showcase Space',
       image: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?auto=format&fit=crop&w=1200&q=80',
-      description: 'Our crown jewel rehearsal space features 1,800 sq.ft of pillar-free sprung hardwood flooring, 12-foot distortion-free mirror walls, adjustable warm theatrical lighting, and JBL concert-grade surround sound on Hanshoura Road.',
+      description: `Our crown jewel rehearsal space features 1,800 sq.ft of pillar-free sprung hardwood flooring, 12-foot distortion-free mirror walls, adjustable warm theatrical lighting, and JBL concert-grade surround sound at our ${shortAddress} facility.`,
       specs: [
         'Capacity: 35 Dancers',
         '1,800 sq.ft Pillar-Free Space',
@@ -54,7 +63,7 @@ export const StudioTourSection: React.FC = () => {
         'Private Changing Booths & Vanity',
         'Biometric Secure Lockers',
         'Filtered Water & Coffee Bar',
-        'Dedicated Parking on Hanshoura Road'
+        `Dedicated Parking at ${shortAddress}`
       ]
     }
   };
@@ -69,13 +78,13 @@ export const StudioTourSection: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D8E8D4] text-[#3D6338] text-xs font-bold uppercase tracking-widest mb-3">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Ahmedabad's Flagship Dance Facility</span>
+              <span>{generalInfo.city || 'Ahmedabad'}'s Flagship Dance Facility</span>
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-[#1E1D1B] tracking-tight">
               Designed for Artistic Excellence &amp; Safety
             </h2>
             <p className="text-[#5A5854] text-sm sm:text-base mt-3">
-              Over 3,500 sq.ft of premium dance environment located on Hanshoura Road, Ahmedabad, equipped with concert acoustic sound, injury-preventing sprung floors, and climate control.
+              Over 3,500 sq.ft of premium dance environment located at {currentAddress}, equipped with concert acoustic sound, injury-preventing sprung floors, and climate control.
             </p>
 
             {/* Interactive Space Tabs */}
@@ -102,97 +111,96 @@ export const StudioTourSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Space Spotlight Card with Zoom/Fade Reveal */}
-        <ScrollReveal animation="fade-up" delay={100} duration={700}>
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D9D7D0] shadow-xl mb-14 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Details */}
-              <div className="lg:col-span-6 space-y-5">
-                <div>
-                  <span className="px-3 py-1 bg-[#D8E8D4] text-[#3D6338] rounded-full text-xs font-bold uppercase tracking-wider">
-                    {current.badge}
-                  </span>
-                  <h3 className="font-display text-2xl sm:text-4xl font-bold text-[#1E1D1B] mt-2">
-                    {current.title}
-                  </h3>
-                </div>
+        {/* Feature Display Area */}
+        <ScrollReveal animation="fade-up" delay={120} duration={700}>
+          <div className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+            {/* Image Side */}
+            <div className="lg:col-span-7 relative min-h-[320px] sm:min-h-[420px] bg-[#2C2B29] overflow-hidden group">
+              <SafeImage
+                key={activeTab}
+                src={current.image}
+                alt={current.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+              <div className="absolute top-4 left-4">
+                <span className="px-3 py-1 bg-[#3D6338] text-white text-xs font-bold uppercase rounded-full tracking-wider shadow-sm">
+                  {current.badge}
+                </span>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <h3 className="font-display font-bold text-2xl text-white drop-shadow-sm">
+                  {current.title}
+                </h3>
+              </div>
+            </div>
 
-                <p className="text-sm sm:text-base text-[#5A5854] leading-relaxed">
+            {/* Description & Specs Side */}
+            <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+              <div>
+                <div className="text-xs uppercase font-bold tracking-widest text-[#7A9E74] mb-2">
+                  Studio Infrastructure
+                </div>
+                <h3 className="font-display text-2xl font-bold text-[#1E1D1B] leading-tight mb-3">
+                  {current.title}
+                </h3>
+                <p className="text-[#5A5854] text-sm leading-relaxed">
                   {current.description}
                 </p>
+              </div>
 
-                {/* Specs Pills */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  {current.specs.map((spec, i) => (
-                    <div key={i} className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#F7F5F0] border border-[#D9D7D0]/60">
+              {/* Technical Specifications */}
+              <div className="border-t border-[#EFEDE7] pt-4">
+                <div className="text-xs font-bold text-[#1E1D1B] uppercase tracking-wider mb-3">
+                  Key Technical Features:
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {current.specs.map((spec, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs text-[#2C2B29] bg-[#F7F5F0] p-2.5 rounded-xl border border-[#D9D7D0]/60">
                       <CheckCircle2 className="w-4 h-4 text-[#3D6338] flex-shrink-0" />
-                      <span className="text-xs font-semibold text-[#1E1D1B]">{spec}</span>
+                      <span className="font-medium">{spec}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Right Photo */}
-              <div className="lg:col-span-6 relative aspect-[16/10] rounded-2xl overflow-hidden bg-[#2C2B29] shadow-lg group">
-                <img
-                  key={activeTab}
-                  src={current.image}
-                  alt={current.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white text-xs font-semibold">
-                  <span className="backdrop-blur-md bg-black/40 px-3 py-1 rounded-full border border-white/20">
-                    Hanshoura Road Campus · Ahmedabad
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Layers className="w-3.5 h-3.5 text-[#B5CAB0]" /> Verified Facility
-                  </span>
-                </div>
+              {/* Injury Prevention Guarantee Pill */}
+              <div className="p-3 bg-[#D8E8D4]/60 border border-[#B5CAB0] rounded-2xl flex items-center gap-2.5 text-xs text-[#3D6338]">
+                <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+                <span>Certified shock-damping sprung floor technology protecting dancers' knees and joints.</span>
               </div>
             </div>
           </div>
         </ScrollReveal>
 
-        {/* Studio Amenities 6-Card Grid with Staggered Entrance */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {amenitiesList.map((amenity, idx) => (
-            <ScrollReveal
-              key={idx}
-              animation="fade-up"
-              delay={idx * 80}
-              duration={650}
-              className="h-full"
-            >
-              <div className="p-6 rounded-3xl bg-white border border-[#D9D7D0] hover:border-[#7A9E74] transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1 group h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#D8E8D4] text-[#3D6338] flex items-center justify-center shadow-2xs group-hover:scale-110 group-hover:bg-[#3D6338] group-hover:text-white transition-all">
-                      {idx === 0 && <ShieldCheck className="w-6 h-6" />}
-                      {idx === 1 && <Maximize2 className="w-6 h-6" />}
-                      {idx === 2 && <Volume2 className="w-6 h-6" />}
-                      {idx === 3 && <Wind className="w-6 h-6" />}
-                      {idx === 4 && <Sparkles className="w-6 h-6" />}
-                      {idx === 5 && <Lock className="w-6 h-6" />}
-                    </div>
+        {/* Studio Amenities Grid */}
+        {amenitiesList.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-[#D9D7D0]">
+            <div className="text-center mb-6">
+              <span className="text-xs uppercase font-bold tracking-widest text-[#7A9E74]">
+                Everything You Need Under One Roof
+              </span>
+              <h3 className="font-display text-2xl font-bold text-[#1E1D1B] mt-1">
+                Studio Amenities &amp; Member Perks
+              </h3>
+            </div>
 
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#9E9B92]">
-                      Amenity 0{idx + 1}
-                    </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {amenitiesList.map((amenity, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white p-3.5 rounded-2xl border border-[#D9D7D0] text-center flex flex-col items-center justify-center space-y-1.5 shadow-2xs hover:border-[#7A9E74] transition group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#D8E8D4]/60 text-[#3D6338] flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                    {amenity.icon || '✓'}
                   </div>
-
-                  <h4 className="font-display font-bold text-xl text-[#1E1D1B] mb-2">
-                    {amenity.title}
-                  </h4>
-                  <p className="text-xs text-[#5A5854] leading-relaxed">
-                    {amenity.description}
-                  </p>
+                  <span className="text-xs font-bold text-[#1E1D1B] block">{amenity.name}</span>
+                  <span className="text-[10px] text-[#9E9B92] block">{amenity.desc}</span>
                 </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

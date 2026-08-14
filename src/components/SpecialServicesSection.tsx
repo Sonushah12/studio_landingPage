@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, Check, ArrowRight } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 interface SpecialServicesSectionProps {
@@ -9,7 +10,14 @@ interface SpecialServicesSectionProps {
 
 export const SpecialServicesSection: React.FC<SpecialServicesSectionProps> = ({ onRequestCustomQuote }) => {
   const { data } = useStudioData();
+  const { generalInfo } = data;
   const servicesList = data.specialServices || [];
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+  const shortAddress = currentAddress.split(',')[0] || 'Hanshoura Road';
 
   return (
     <section id="wedding-services" className="py-20 bg-[#F7F5F0] border-t border-[#D9D7D0] relative">
@@ -25,7 +33,7 @@ export const SpecialServicesSection: React.FC<SpecialServicesSectionProps> = ({ 
               Wedding Sangeet &amp; Event Choreography
             </h2>
             <p className="text-[#5A5854] text-sm sm:text-base mt-3">
-              Make your milestone celebrations unforgettable on Hanshoura Road. From romantic couple first dances to showstopping 40-person family medleys and corporate team-building.
+              Make your milestone celebrations unforgettable at our {shortAddress} studio. From romantic couple first dances to showstopping 40-person family medleys and corporate team-building.
             </p>
           </div>
         </ScrollReveal>
@@ -44,10 +52,9 @@ export const SpecialServicesSection: React.FC<SpecialServicesSectionProps> = ({ 
                 <div>
                   {/* Photo Header */}
                   <div className="relative aspect-[16/10] overflow-hidden bg-[#2C2B29]">
-                    <img
+                    <SafeImage
                       src={service.image}
                       alt={service.title}
-                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />

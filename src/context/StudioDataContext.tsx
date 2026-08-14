@@ -135,18 +135,24 @@ export const StudioDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     // Keep address in sync
-    const addressParts = [
-      rawUpdated.addressLine1,
-      rawUpdated.addressLine2,
-      rawUpdated.city,
-      rawUpdated.state,
-      rawUpdated.pincode,
-    ].filter(Boolean);
+    if (info.address || info.fullAddress) {
+      const explicitAddress = info.address || info.fullAddress;
+      rawUpdated.address = explicitAddress;
+      rawUpdated.fullAddress = explicitAddress;
+    } else {
+      const addressParts = [
+        rawUpdated.addressLine1,
+        rawUpdated.addressLine2,
+        rawUpdated.city,
+        rawUpdated.state,
+        rawUpdated.pincode,
+      ].filter(Boolean);
 
-    const computedAddress = addressParts.length > 0 ? addressParts.join(', ') : rawUpdated.address;
-    if (computedAddress) {
-      rawUpdated.fullAddress = computedAddress;
-      rawUpdated.address = computedAddress;
+      const computedAddress = addressParts.length > 0 ? addressParts.join(', ') : rawUpdated.address;
+      if (computedAddress) {
+        rawUpdated.fullAddress = computedAddress;
+        rawUpdated.address = computedAddress;
+      }
     }
 
     // Keep stats aliases in sync

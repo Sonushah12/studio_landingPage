@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Check, Calendar, Clock, MapPin, Sparkles, MessageCircle, Printer, Download, QrCode } from 'lucide-react';
 import { TrialBooking } from '../types';
+import { useStudioData } from '../context/StudioDataContext';
 
 interface PassCardModalProps {
   booking: TrialBooking | null;
@@ -8,14 +9,23 @@ interface PassCardModalProps {
 }
 
 export const PassCardModal: React.FC<PassCardModalProps> = ({ booking, onClose }) => {
+  const { data } = useStudioData();
+  const { generalInfo } = data;
+
   if (!booking) return null;
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
 
   const handlePrint = () => {
     window.print();
   };
 
+  const whatsappNumber = generalInfo.whatsapp || '919909843221';
   const whatsappText = encodeURIComponent(
-    `Hi Sonu Shah and Merrick Dance Team! I just generated my Free VIP Trial Pass (Code: ${booking.bookingCode}) for ${booking.selectedClass} on ${booking.preferredDay} (${booking.preferredTime}). Name: ${booking.firstName} ${booking.lastName}. Looking forward to seeing you at the studio!`
+    `Hi Sonu Shah and ${generalInfo.studioName || 'Merrick Dance'} Team! I just generated my Free VIP Trial Pass (Code: ${booking.bookingCode}) for ${booking.selectedClass} on ${booking.preferredDay} (${booking.preferredTime}). Name: ${booking.firstName} ${booking.lastName}. Looking forward to seeing you at ${currentAddress}!`
   );
 
   return (
@@ -57,7 +67,7 @@ export const PassCardModal: React.FC<PassCardModalProps> = ({ booking, onClose }
                   OFFICIAL VIP TRIAL PASS
                 </span>
                 <h4 className="font-display font-bold text-lg text-[#1E1D1B]">
-                  Merrick Dance &amp; Entertainment
+                  {generalInfo.studioName || 'Merrick Dance & Entertainment'}
                 </h4>
               </div>
               <div className="text-right">
@@ -93,8 +103,8 @@ export const PassCardModal: React.FC<PassCardModalProps> = ({ booking, onClose }
 
               <div>
                 <span className="text-[10px] text-[#9E9B92] uppercase block">Location</span>
-                <span className="font-semibold text-[#1E1D1B] block">
-                  Hanshoura Road, Ahmedabad
+                <span className="font-semibold text-[#1E1D1B] block truncate" title={currentAddress}>
+                  {currentAddress}
                 </span>
               </div>
             </div>
@@ -118,13 +128,13 @@ export const PassCardModal: React.FC<PassCardModalProps> = ({ booking, onClose }
           {/* Action Buttons */}
           <div className="space-y-2 pt-2">
             <a
-              href={`https://wa.me/919909843221?text=${whatsappText}`}
+              href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`}
               target="_blank"
               rel="noreferrer"
               className="w-full py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Confirm Pass on WhatsApp (+91 99098 43221)</span>
+              <span>Confirm Pass on WhatsApp ({generalInfo.phoneDisplay || '+91 99098 43221'})</span>
             </a>
 
             <div className="flex gap-2">

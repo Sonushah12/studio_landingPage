@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Calendar, Volume2, VolumeX, ArrowRight, Award, Users, Music, CheckCircle2, Play, Pause, Flame, Heart } from 'lucide-react';
 import { rhythmSynth } from '../utils/audioSynth';
 import { useStudioData } from '../context/StudioDataContext';
+import { animateHeroEntrance } from '../utils/gsapAnimations';
+import { SafeImage } from './SafeImage';
 
 interface HeroProps {
   onOpenTrialModal: () => void;
@@ -14,16 +16,31 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
   const [activeImageIdx, setActiveImageIdx] = useState<number>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(true);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const { data } = useStudioData();
   const { heroConfig, generalInfo } = data;
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+
   const heroImages = heroConfig?.slides?.length ? heroConfig.slides : [
     {
       url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
       title: 'Main Studio Rehearsal',
-      badge: 'Hanshoura Road Studio',
+      badge: `${currentAddress.split(',')[0]} Studio`,
       genre: 'Urban & Contemporary'
     }
   ];
+
+  useEffect(() => {
+    // GSAP entrance animation
+    const tl = animateHeroEntrance(containerRef.current);
+    return () => {
+      tl?.kill();
+    };
+  }, []);
 
   useEffect(() => {
     if (!isAutoPlaying || heroImages.length <= 1) return;
@@ -46,9 +63,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
   };
 
   const currentHeroImage = heroImages[activeImageIdx] || heroImages[0];
+  const currentHeroImgUrl = (currentHeroImage as any)?.imageUrl || (currentHeroImage as any)?.url || '';
 
   return (
-    <section id="home" className="relative min-h-[92vh] bg-[#F7F5F0] overflow-hidden pt-6 pb-14 lg:py-16 flex flex-col justify-center">
+    <section
+      id="home"
+      ref={containerRef}
+      className="relative min-h-[92vh] bg-[#F7F5F0] overflow-hidden pt-6 pb-14 lg:py-16 flex flex-col justify-center"
+    >
       {/* Background Animated Gradient Blobs */}
       <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] rounded-full bg-[#D8E8D4]/60 blur-3xl pointer-events-none animate-pulse-subtle -z-10" />
       <div className="absolute top-1/2 -left-36 w-96 h-96 rounded-full bg-[#B5CAB0]/40 blur-3xl pointer-events-none animate-float -z-10" />
@@ -57,11 +79,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Urgent Live Pill */}
         <div className="flex wrap items-center gap-2.5 mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D8E8D4] border border-[#B5CAB0] text-[#3D6338] text-xs font-semibold tracking-wide shadow-sm hover:scale-105 transition-transform">
+          <div className="gsap-hero-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D8E8D4] border border-[#B5CAB0] text-[#3D6338] text-xs font-semibold tracking-wide shadow-sm hover:scale-105 transition-transform">
             <span className="w-2.5 h-2.5 rounded-full bg-[#3D6338] animate-ping" />
-            <span className="font-bold">{heroConfig.badgeText || `Admissions Open · ${generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}`}</span>
+            <span className="font-bold">
+              {heroConfig.badgeText || `Admissions Open · ${currentAddress}`}
+            </span>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-[#D9D7D0] text-xs text-[#5A5854] font-medium shadow-xs">
+          <div className="gsap-hero-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-[#D9D7D0] text-xs text-[#5A5854] font-medium shadow-xs">
             <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
             <span>1st Complimentary Trial Class Included</span>
           </div>
@@ -70,25 +94,35 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Hero Copy & Actions */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 border-l-4 border-[#3D6338] pl-3 py-0.5">
+            <div className="gsap-hero-badge inline-flex items-center gap-2 border-l-4 border-[#3D6338] pl-3 py-0.5">
               <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#3D6338]">
                 Mastery · Passion · Rhythm · Stage
               </span>
             </div>
 
-            <h1 className="font-display text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-[#1E1D1B] leading-[1.08]">
+            <h1 className="gsap-hero-title font-display text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-[#1E1D1B] leading-[1.08]">
               {heroConfig.mainHeadline1}{' '}
               <span className="italic font-normal text-[#3D6338] relative inline-block">
                 {heroConfig.mainHeadlineHighlight}
-                <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#B5CAB0]" viewBox="0 0 100 12" preserveAspectRatio="none">
-                  <path d="M0,8 Q50,0 100,8" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" />
+                <svg
+                  className="absolute -bottom-2 left-0 w-full h-3 text-[#B5CAB0]"
+                  viewBox="0 0 100 12"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M0,8 Q50,0 100,8"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </span>
               <br />
               {heroConfig.mainHeadline2}
             </h1>
 
-            <p className="text-base sm:text-lg text-[#5A5854] leading-relaxed max-w-xl font-normal">
+            <p className="gsap-hero-desc text-base sm:text-lg text-[#5A5854] leading-relaxed max-w-xl font-normal">
               {heroConfig.subDescription}
             </p>
 
@@ -96,7 +130,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <button
                 onClick={onOpenTrialModal}
-                className="px-7 py-4 bg-[#3D6338] hover:bg-[#2F4E2B] text-white rounded-full font-semibold text-sm tracking-wide shadow-lg shadow-[#3D6338]/25 hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer group"
+                className="gsap-hero-cta px-7 py-4 bg-[#3D6338] hover:bg-[#2F4E2B] text-white rounded-full font-semibold text-sm tracking-wide shadow-lg shadow-[#3D6338]/25 hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer group"
               >
                 <Calendar className="w-4 h-4 text-[#D8E8D4]" />
                 <span>{heroConfig.ctaPrimaryText || 'Book Your Free Trial Class'}</span>
@@ -105,7 +139,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
 
               <button
                 onClick={onOpenQuiz}
-                className="px-6 py-4 bg-white hover:bg-[#EFEDE7] text-[#1E1D1B] border border-[#B5CAB0] rounded-full font-semibold text-sm tracking-wide shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
+                className="gsap-hero-cta px-6 py-4 bg-white hover:bg-[#EFEDE7] text-[#1E1D1B] border border-[#B5CAB0] rounded-full font-semibold text-sm tracking-wide shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#7A9E74] animate-spin" style={{ animationDuration: '8s' }} />
                 <span>{heroConfig.ctaSecondaryText || 'Find Your Dance Match'}</span>
@@ -114,22 +148,22 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
 
             {/* Quick Benefits Bullet Badges */}
             <div className="pt-3 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-[#2C2B29]">
-              <div className="flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs">
+              <div className="gsap-hero-pill flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
                 <span>No Experience Needed</span>
               </div>
-              <div className="flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs">
+              <div className="gsap-hero-pill flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
                 <span>All Ages (3 to 60+)</span>
               </div>
-              <div className="flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs col-span-2 sm:col-span-1">
+              <div className="gsap-hero-pill flex items-center gap-2 font-medium bg-white/70 px-3 py-2 rounded-xl border border-[#D9D7D0]/60 shadow-2xs col-span-2 sm:col-span-1">
                 <CheckCircle2 className="w-4 h-4 text-[#7A9E74] flex-shrink-0" />
                 <span>Grand Stage Recital</span>
               </div>
             </div>
 
             {/* Interactive Rhythm Sample Bar */}
-            <div className="pt-2 p-4 bg-white/85 backdrop-blur-sm rounded-2xl border border-[#D9D7D0] shadow-sm max-w-xl">
+            <div className="gsap-hero-pill pt-2 p-4 bg-white/85 backdrop-blur-sm rounded-2xl border border-[#D9D7D0] shadow-sm max-w-xl">
               <div className="flex items-center justify-between mb-2.5">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#1E1D1B]">
                   <div className="w-6 h-6 rounded-full bg-[#D8E8D4] flex items-center justify-center text-[#3D6338]">
@@ -189,14 +223,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
           {/* Right Column: Visual Photo Centerpiece with Dynamic Animations */}
           <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
             {/* Visual Container Card */}
-            <div className="relative w-full max-w-md bg-white rounded-3xl p-3 sm:p-4 border border-[#D9D7D0] shadow-2xl overflow-hidden group">
+            <div className="gsap-hero-image relative w-full max-w-md bg-white rounded-3xl p-3 sm:p-4 border border-[#D9D7D0] shadow-2xl overflow-hidden group">
               {/* Photo Showcase Carousel */}
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#2C2B29]">
-                <img
+                <SafeImage
                   key={activeImageIdx}
-                  src={currentHeroImage.url}
+                  src={currentHeroImgUrl}
                   alt={currentHeroImage.title}
-                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105"
                 />
                 
@@ -267,7 +300,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
                   </div>
                   <div>
                     <div className="text-xs font-bold text-[#1E1D1B]">Next Batch Rehearsal: Saturday</div>
-                    <div className="text-[11px] text-[#5A5854]">11:00 AM · {generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}</div>
+                    <div className="text-[11px] text-[#5A5854]">11:00 AM · {currentAddress}</div>
                   </div>
                 </div>
                 <button
@@ -282,22 +315,19 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
             {/* Floating Review Badge */}
             <div className="hidden sm:flex absolute -bottom-5 -left-6 bg-white rounded-2xl p-3 border border-[#D9D7D0] shadow-lg items-center gap-3 animate-float">
               <div className="flex -space-x-2">
-                <img
+                <SafeImage
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
                   alt="Dancer"
-                  referrerPolicy="no-referrer"
                   className="w-7 h-7 rounded-full border-2 border-white object-cover"
                 />
-                <img
+                <SafeImage
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
                   alt="Dancer"
-                  referrerPolicy="no-referrer"
                   className="w-7 h-7 rounded-full border-2 border-white object-cover"
                 />
-                <img
+                <SafeImage
                   src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80"
                   alt="Dancer"
-                  referrerPolicy="no-referrer"
                   className="w-7 h-7 rounded-full border-2 border-white object-cover"
                 />
               </div>
@@ -311,25 +341,25 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
 
         {/* Studio Key Stats Strip */}
         <div className="mt-12 pt-8 border-t border-[#D9D7D0]/70 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
-          <div className="p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
+          <div className="gsap-hero-stat p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
             <div className="font-display text-3xl sm:text-4xl font-bold text-[#1E1D1B]">{generalInfo.stats?.yearsOfExcellence || generalInfo.stats?.yearsExp || '12+'}</div>
             <div className="text-xs uppercase tracking-wider font-semibold text-[#3D6338] mt-1">Years of Excellence</div>
-            <div className="text-[11px] text-[#9E9B92] mt-0.5">Est. 2012 in Ahmedabad</div>
+            <div className="text-[11px] text-[#9E9B92] mt-0.5">Est. 2012 in {generalInfo.city || 'Ahmedabad'}</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
+          <div className="gsap-hero-stat p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
             <div className="font-display text-3xl sm:text-4xl font-bold text-[#1E1D1B]">{generalInfo.stats?.studentsTrained || generalInfo.stats?.studentsCount || '1,200+'}</div>
             <div className="text-xs uppercase tracking-wider font-semibold text-[#3D6338] mt-1">Dancers Trained</div>
             <div className="text-[11px] text-[#9E9B92] mt-0.5">Kids, Teens &amp; Adults</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
+          <div className="gsap-hero-stat p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
             <div className="font-display text-3xl sm:text-4xl font-bold text-[#1E1D1B]">{generalInfo.stats?.danceDisciplines || generalInfo.stats?.choreographersCount || '8+'}</div>
             <div className="text-xs uppercase tracking-wider font-semibold text-[#3D6338] mt-1">Dance Disciplines</div>
             <div className="text-[11px] text-[#9E9B92] mt-0.5">Bollywood, Hip-Hop, Salsa &amp; More</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
+          <div className="gsap-hero-stat p-4 rounded-2xl bg-white/70 border border-[#D9D7D0]/60 backdrop-blur-sm shadow-xs hover:border-[#B5CAB0] transition">
             <div className="font-display text-3xl sm:text-4xl font-bold text-[#1E1D1B]">{generalInfo.stats?.reviewsCount || generalInfo.stats?.productionsCount || '340+'}</div>
             <div className="text-xs uppercase tracking-wider font-semibold text-[#3D6338] mt-1">Verified 5★ Reviews</div>
             <div className="text-[11px] text-[#9E9B92] mt-0.5">Google &amp; Student Testimonials</div>
@@ -340,12 +370,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTrialModal, onOpenQuiz, onScro
       {/* Animated Marquee Strip */}
       <div className="w-full bg-[#1E1D1B] text-[#F7F5F0] py-2.5 mt-10 overflow-hidden border-y border-[#3D6338]/30">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-[#B5CAB0]">
-          <span className="flex items-center gap-2">✦ NEW BATCHES STARTING THIS WEEK ON HANSHOURA ROAD</span>
+          <span className="flex items-center gap-2">✦ NEW BATCHES STARTING THIS WEEK AT {currentAddress.toUpperCase()}</span>
           <span className="text-amber-400">★ MASTER CHOREOGRAPHERS NITIN OAD &amp; SHUBHAM RAJPUT</span>
           <span className="flex items-center gap-2">✦ BOLLYWOOD COMMERCIAL · URBAN HIP-HOP · SALSA BACHATA · CONTEMPORARY FLOW</span>
           <span className="text-emerald-400">★ 100% FREE TRIAL CLASS WITH ZERO COMMITMENT</span>
           <span className="flex items-center gap-2">✦ SPRUNG HARDWOOD FLOORING &amp; JBL CONCERT SOUND</span>
-          <span className="flex items-center gap-2">✦ NEW BATCHES STARTING THIS WEEK ON HANSHOURA ROAD</span>
+          <span className="flex items-center gap-2">✦ NEW BATCHES STARTING THIS WEEK AT {currentAddress.toUpperCase()}</span>
           <span className="text-amber-400">★ MASTER CHOREOGRAPHERS NITIN OAD &amp; SHUBHAM RAJPUT</span>
           <span className="flex items-center gap-2">✦ BOLLYWOOD COMMERCIAL · URBAN HIP-HOP · SALSA BACHATA · CONTEMPORARY FLOW</span>
           <span className="text-emerald-400">★ 100% FREE TRIAL CLASS WITH ZERO COMMITMENT</span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Check, Calendar, Clock, Users, Flame, Award, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
 import { DanceClass } from '../types';
+import { SafeImage } from './SafeImage';
 
 interface ClassDetailModalProps {
   danceClass: DanceClass | null;
@@ -20,10 +21,9 @@ export const ClassDetailModal: React.FC<ClassDetailModalProps> = ({
       <div className="bg-[#F7F5F0] rounded-3xl max-w-2xl w-full border border-[#D9D7D0] shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
         {/* Modal Photo Header */}
         <div className="relative aspect-[21/9] bg-[#1E1D1B] overflow-hidden">
-          <img
+          <SafeImage
             src={danceClass.imageUrl}
             alt={danceClass.name}
-            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />

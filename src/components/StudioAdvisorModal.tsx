@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Sparkles, Send, Bot, User, ArrowRight, MessageCircle } from 'lucide-react';
+import { useStudioData } from '../context/StudioDataContext';
 
 interface StudioAdvisorModalProps {
   isOpen: boolean;
@@ -19,6 +20,15 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
   onClose,
   onBookTrial,
 }) => {
+  const { data } = useStudioData();
+  const { generalInfo } = data;
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+  const shortAddress = currentAddress.split(',')[0] || 'Hanshoura Road';
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
@@ -51,8 +61,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
 
     switch (action) {
       case 'trial':
-        botResponse =
-          'Every new dancer is entitled to 1 complimentary Free Trial Class with zero commitment! You can attend any active batch, meet our faculty (Nitin Oad or Shubham Rajput), and experience our shock-absorbing sprung floors on Hanshoura Road.';
+        botResponse = `Every new dancer is entitled to 1 complimentary Free Trial Class with zero commitment! You can attend any active batch, meet our faculty (Nitin Oad or Shubham Rajput), and experience our shock-absorbing sprung floors at ${shortAddress}.`;
         nextOptions = [{ label: 'Book My Free Trial Now', action: 'trigger_booking' }];
         break;
 
@@ -78,8 +87,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
         break;
 
       case 'sangeet':
-        botResponse =
-          'Our senior choreography team provides end-to-end Wedding Sangeet choreography: Bride & Groom first dance, parents retro medleys, family flashmobs, custom studio song mixing, and take-home video practice guides. Rehearsals available at our studio on Hanshoura Road or your residence in Ahmedabad.';
+        botResponse = `Our senior choreography team provides end-to-end Wedding Sangeet choreography: Bride & Groom first dance, parents retro medleys, family flashmobs, custom studio song mixing, and take-home video practice guides. Rehearsals available at our studio at ${currentAddress} or your residence.`;
         nextOptions = [{ label: 'Chat on WhatsApp for Sangeet', action: 'whatsapp_sangeet' }];
         break;
 
@@ -109,7 +117,10 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
         return;
 
       case 'whatsapp_sangeet':
-        window.open('https://wa.me/919909843221?text=Hi%20Merrick%20Dance%20Team%2C%20I%20would%20like%20to%20inquire%20about%20Wedding%20Sangeet%20Choreography', '_blank');
+        window.open(
+          `https://wa.me/${generalInfo.whatsapp || '919909843221'}?text=Hi%20Merrick%20Dance%20Team%2C%20I%20would%20like%20to%20inquire%20about%20Wedding%20Sangeet%20Choreography`,
+          '_blank'
+        );
         return;
 
       case 'trigger_pricing_calc':
@@ -119,8 +130,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
         return;
 
       default:
-        botResponse =
-          'Thank you for your question! You can visit us on Hanshoura Road, Ahmedabad, or our front desk coordinators are happy to assist you directly at +91 99098 43221 or via email at sonu.shah99098@gmail.com.';
+        botResponse = `Thank you for your question! You can visit us at ${currentAddress}, or our front desk coordinators are happy to assist you directly at ${generalInfo.phoneDisplay || '+91 99098 43221'} or via email at ${generalInfo.email || 'sonu.shah99098@gmail.com'}.`;
     }
 
     setMessages((prev) => [
@@ -148,8 +158,7 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
       text: userText,
     };
 
-    let reply =
-      'Thank you! At Merrick Dance Studio, Nitin Oad and Shubham Rajput welcome dancers of all levels. Our studio is open Monday to Saturday 7 AM – 9 PM and Sunday 8 AM – 6 PM on Hanshoura Road, Ahmedabad. Would you like to reserve a free trial pass?';
+    let reply = `Thank you! At ${generalInfo.studioName || 'Merrick Dance Studio'}, Nitin Oad and Shubham Rajput welcome dancers of all levels. Our studio is open Monday to Saturday (${generalInfo.operatingHoursWeekday || '7:00 AM – 9:30 PM'}) and Sunday (${generalInfo.operatingHoursWeekend || generalInfo.operatingHoursSunday || '8:00 AM – 7:00 PM'}) at ${currentAddress}. Would you like to reserve a free trial pass?`;
 
     const lower = userText.toLowerCase();
     if (lower.includes('price') || lower.includes('fee') || lower.includes('cost')) {
@@ -159,9 +168,13 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
       reply =
         'For Bollywood/Hip-Hop/Salsa: comfortable athletic wear and clean indoor sneakers. For Contemporary: stretchable tights/leggings or barefoot.';
     } else if (lower.includes('where') || lower.includes('address') || lower.includes('location')) {
-      reply =
-        'We are conveniently located on Hanshoura Road, Ahmedabad with free dedicated parking on premise.';
-    } else if (lower.includes('tutor') || lower.includes('instructor') || lower.includes('teacher') || lower.includes('choreographer')) {
+      reply = `We are conveniently located at ${currentAddress} with dedicated student parking on premise.`;
+    } else if (
+      lower.includes('tutor') ||
+      lower.includes('instructor') ||
+      lower.includes('teacher') ||
+      lower.includes('choreographer')
+    ) {
       reply =
         'Our 2 acclaimed master choreographers are Nitin Oad (Urban & Contemporary Specialist) and Shubham Rajput (Latin, Bollywood & Kids Movement Lead).';
     }
@@ -199,63 +212,81 @@ export const StudioAdvisorModal: React.FC<StudioAdvisorModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-[#D9D7D0] text-[#5A5854] transition cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-[#D9D7D0] text-[#5A5854] transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Chat Stream Body */}
-        <div className="p-4 flex-1 overflow-y-auto space-y-3">
-          {messages.map((msg) => (
+        {/* Message Area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+          {messages.map((m) => (
             <div
-              key={msg.id}
-              className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
+              key={m.id}
+              className={`flex items-start gap-2 ${
+                m.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+              }`}
             >
               <div
-                className={`max-w-[85%] p-3.5 rounded-2xl text-xs leading-relaxed ${
-                  msg.sender === 'user'
-                    ? 'bg-[#3D6338] text-white rounded-tr-none'
-                    : 'bg-white text-[#2C2B29] border border-[#D9D7D0] rounded-tl-none shadow-sm'
+                className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] ${
+                  m.sender === 'user'
+                    ? 'bg-[#1E1D1B] text-white'
+                    : 'bg-[#3D6338] text-white'
                 }`}
               >
-                {msg.text}
+                {m.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
               </div>
 
-              {/* Quick Action Options */}
-              {msg.options && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {msg.options.map((opt, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleOptionClick(opt.action, opt.label)}
-                      className="px-2.5 py-1 bg-white hover:bg-[#D8E8D4]/60 text-[#3D6338] text-[11px] font-semibold rounded-full border border-[#B5CAB0] transition shadow-xs cursor-pointer"
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+              <div className="max-w-[80%] space-y-2">
+                <div
+                  className={`p-3 rounded-2xl leading-relaxed ${
+                    m.sender === 'user'
+                      ? 'bg-[#3D6338] text-white rounded-tr-none shadow-xs'
+                      : 'bg-white text-[#1E1D1B] border border-[#D9D7D0] rounded-tl-none shadow-xs'
+                  }`}
+                >
+                  {m.text}
                 </div>
-              )}
+
+                {/* Optional Quick Action Pills */}
+                {m.options && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {m.options.map((opt, oIdx) => (
+                      <button
+                        key={oIdx}
+                        onClick={() => handleOptionClick(opt.action, opt.label)}
+                        className="px-2.5 py-1.5 rounded-full bg-white hover:bg-[#D8E8D4] border border-[#B5CAB0] text-[#3D6338] text-[11px] font-medium transition cursor-pointer flex items-center gap-1 shadow-2xs"
+                      >
+                        <span>{opt.label}</span>
+                        <ArrowRight className="w-2.5 h-2.5 opacity-60" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Input bar */}
-        <form onSubmit={handleSendCustom} className="p-3 bg-white border-t border-[#D9D7D0] flex gap-2">
-          <input
-            type="text"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Type a question (e.g. trial, parking, tutors, fee)..."
-            className="flex-1 px-3.5 py-2 rounded-full bg-[#F7F5F0] border border-[#D9D7D0] focus:border-[#3D6338] text-xs text-[#1E1D1B] outline-none"
-          />
-          <button
-            type="submit"
-            className="w-9 h-9 rounded-full bg-[#3D6338] hover:bg-[#2F4E2B] text-white flex items-center justify-center transition cursor-pointer"
-          >
-            <Send className="w-4 h-4" />
-          </button>
-        </form>
+        {/* Input Footer */}
+        <div className="p-3 bg-[#EFEDE7] border-t border-[#D9D7D0]">
+          <form onSubmit={handleSendCustom} className="flex items-center gap-2">
+            <input
+              type="text"
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              placeholder="Ask about classes, fees, dress code, location..."
+              className="flex-1 px-3.5 py-2 rounded-xl bg-white border border-[#D9D7D0] focus:border-[#3D6338] text-xs text-[#1E1D1B] outline-none shadow-inner"
+            />
+            <button
+              type="submit"
+              disabled={!inputVal.trim()}
+              className="p-2 rounded-xl bg-[#3D6338] hover:bg-[#2F4E2B] text-white transition disabled:opacity-40 cursor-pointer shadow-xs"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

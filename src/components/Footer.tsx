@@ -73,7 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTrialModal, onOpenQuiz }) 
             </div>
 
             <p className="text-[#9E9B92] leading-relaxed pr-4">
-              Ahmedabad’s premier dance institution dedicated to creative excellence, authentic technique, and passionate self-expression. Directed by Sonu Shah on {(generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad').split(',')[1]?.trim() || (generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road')}.
+              {generalInfo.city || 'Ahmedabad'}’s premier dance institution dedicated to creative excellence, authentic technique, and passionate self-expression. Directed by Sonu Shah at {generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}.
             </p>
 
             {/* Social Media Links with Sonushah7373 */}

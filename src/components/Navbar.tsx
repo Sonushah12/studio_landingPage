@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Calendar, Clock, MapPin, Sparkles, Menu, X, MessageCircle } from 'lucide-react';
+import { Phone, Calendar, Clock, MapPin, Sparkles, Menu } from 'lucide-react';
 import { useStudioData } from '../context/StudioDataContext';
+import { MobileDrawerMenu } from './MobileDrawerMenu';
+import { SafeImage } from './SafeImage';
 
 interface NavbarProps {
   onOpenTrialModal: (preferredClass?: string) => void;
@@ -8,9 +10,13 @@ interface NavbarProps {
   onOpenAdvisor: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, onOpenAdvisor }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenTrialModal,
+  onOpenQuiz,
+  onOpenAdvisor,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { data } = useStudioData();
   const { generalInfo } = data;
 
@@ -23,12 +29,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
   }, []);
 
   const scrollToSection = (id: string) => {
-    setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
 
   return (
     <>
@@ -39,12 +49,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
             <div className="flex items-center gap-4 text-[#D9D7D0]">
               <span className="flex items-center gap-1.5 font-medium text-[#D8E8D4]">
                 <span className="inline-block w-2 h-2 rounded-full bg-[#7A9E74] animate-pulse"></span>
-                {generalInfo.announcementBarText || `Studio Open Today · ${generalInfo.operatingHoursWeekday || '7:00 AM – 9:30 PM'}`}
+                {generalInfo.announcementBarText ||
+                  `Studio Open Today · ${generalInfo.operatingHoursWeekday || '7:00 AM – 9:30 PM'}`}
               </span>
               <span className="text-[#9E9B92]">|</span>
               <span className="flex items-center gap-1 truncate max-w-xs">
                 <MapPin className="w-3.5 h-3.5 text-[#B5CAB0] flex-shrink-0" />
-                <span className="truncate">{generalInfo.address || generalInfo.fullAddress || 'Hanshoura Road, Ahmedabad'}</span>
+                <span className="truncate">{currentAddress}</span>
               </span>
             </div>
 
@@ -71,10 +82,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
 
       {/* Main Sticky Navbar */}
       <header
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#F7F5F0]/95 backdrop-blur-md shadow-sm border-b border-[#D9D7D0]/60 py-3'
-            : 'bg-[#F7F5F0]/90 backdrop-blur-sm border-b border-[#D9D7D0]/40 py-4'
+            ? 'bg-[#F7F5F0]/95 backdrop-blur-md shadow-sm border-b border-[#D9D7D0]/60 py-2.5 sm:py-3'
+            : 'bg-[#F7F5F0]/90 backdrop-blur-sm border-b border-[#D9D7D0]/40 py-3 sm:py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -85,38 +96,84 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
               e.preventDefault();
               scrollToSection('home');
             }}
-            className="flex items-center gap-3 group text-left cursor-pointer"
+            className="flex items-center gap-2.5 sm:gap-3 group text-left cursor-pointer"
             aria-label={`${generalInfo.studioName} Homepage`}
           >
-            {/* Custom Dance Ring Vector or Logo */}
             {generalInfo.logoUrl ? (
-              <img
+              <SafeImage
                 src={generalInfo.logoUrl}
                 alt={generalInfo.studioName}
-                className="w-11 h-11 rounded-full object-cover border border-[#B5CAB0]"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border border-[#B5CAB0]"
               />
             ) : (
-              <div className="relative w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-full bg-[#D8E8D4]/60 border border-[#B5CAB0] transition-transform group-hover:scale-105 duration-300">
-                <svg width="28" height="28" viewBox="0 0 44 44" fill="none" className="transform group-hover:rotate-6 transition-transform">
-                  <circle cx="22" cy="22" r="19" stroke="#7A9E74" strokeWidth="1.5" strokeDasharray="3 2" />
-                  <line x1="22" y1="32" x2="20" y2="40" stroke="#3D6338" strokeWidth="2.8" strokeLinecap="round" />
-                  <path d="M22 32 C26 28 30 24 33 20" stroke="#3D6338" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-                  <path d="M22 26 C21 29 22 32 22 32" stroke="#2C2B29" strokeWidth="2.8" strokeLinecap="round" fill="none" />
-                  <path d="M22 26 C19 22 16 18 14 15" stroke="#2C2B29" strokeWidth="2" strokeLinecap="round" fill="none" />
+              <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 flex items-center justify-center rounded-full bg-[#D8E8D4]/60 border border-[#B5CAB0] transition-transform group-hover:scale-105 duration-300">
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 44 44"
+                  fill="none"
+                  className="transform group-hover:rotate-6 transition-transform"
+                >
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="19"
+                    stroke="#7A9E74"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 2"
+                  />
+                  <line
+                    x1="22"
+                    y1="32"
+                    x2="20"
+                    y2="40"
+                    stroke="#3D6338"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M22 32 C26 28 30 24 33 20"
+                    stroke="#3D6338"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 26 C21 29 22 32 22 32"
+                    stroke="#2C2B29"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 26 C19 22 16 18 14 15"
+                    stroke="#2C2B29"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
                   <circle cx="22" cy="13" r="3.5" fill="#2C2B29" />
-                  <path d="M19 30 C16 28 14 31 16 33 C17 31 18 30 19 30Z" fill="#7A9E74" opacity="0.8" />
+                  <path
+                    d="M19 30 C16 28 14 31 16 33 C17 31 18 30 19 30Z"
+                    fill="#7A9E74"
+                    opacity="0.8"
+                  />
                 </svg>
               </div>
             )}
 
             <div>
-              <div className="font-display font-bold text-xl sm:text-2xl tracking-tight text-[#1E1D1B] leading-none group-hover:text-[#3D6338] transition-colors">
+              <div className="font-display font-bold text-lg sm:text-2xl tracking-tight text-[#1E1D1B] leading-none group-hover:text-[#3D6338] transition-colors">
                 {(generalInfo.studioName || 'Merrick').split(' ')[0]}
               </div>
-              <div className="text-[10px] tracking-[0.22em] uppercase font-medium text-[#7A9E74] flex items-center gap-1.5 mt-0.5">
-                <span>{(generalInfo.tagline || 'Dance & Entertainment').split('&')[0]?.trim() || 'Dance'}</span>
+              <div className="text-[9px] sm:text-[10px] tracking-[0.22em] uppercase font-medium text-[#7A9E74] flex items-center gap-1 mt-0.5">
+                <span>
+                  {(generalInfo.tagline || 'Dance & Entertainment').split('&')[0]?.trim() || 'Dance'}
+                </span>
                 <span className="inline-block w-1 h-1 rounded-full bg-[#B5CAB0]"></span>
-                <span className="text-[#5A5854]">{(generalInfo.tagline || 'Dance & Entertainment').split('&')[1]?.trim() || 'Entertainment'}</span>
+                <span className="text-[#5A5854]">
+                  {(generalInfo.tagline || 'Dance & Entertainment').split('&')[1]?.trim() || 'Entertainment'}
+                </span>
               </div>
             </div>
           </a>
@@ -171,12 +228,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
             </button>
           </nav>
 
-          {/* Right Action buttons */}
+          {/* Right Action buttons for Desktop */}
           <div className="hidden sm:flex items-center gap-3">
             <button
               onClick={onOpenAdvisor}
-              className="px-3 py-2 text-xs font-medium text-[#3D6338] bg-[#D8E8D4]/60 hover:bg-[#D8E8D4] rounded-full transition flex items-center gap-1.5 border border-[#B5CAB0]/80 cursor-pointer"
-              title="Ask AI Studio Advisor questions about classes, attire, or batches"
+              className="px-3.5 py-2 text-xs font-medium text-[#3D6338] bg-[#D8E8D4]/60 hover:bg-[#D8E8D4] rounded-full transition flex items-center gap-1.5 border border-[#B5CAB0]/80 cursor-pointer shadow-xs"
+              title="Ask AI Studio Advisor"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#3D6338]" />
               <span className="hidden md:inline">Studio Advisor</span>
@@ -186,136 +243,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTrialModal, onOpenQuiz, on
               onClick={() => onOpenTrialModal()}
               className="px-5 py-2.5 bg-[#3D6338] hover:bg-[#2C4927] text-white text-xs font-semibold tracking-wider uppercase rounded-full shadow-sm hover:shadow-md transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center gap-2"
             >
-              <Calendar className="w-3.5 h-3.5" />
+              <Calendar className="w-3.5 h-3.5 text-[#D8E8D4]" />
               <span>Book Free Trial</span>
             </button>
           </div>
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Quick Action + Slide-out Drawer Hamburger Button */}
           <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={() => onOpenTrialModal()}
-              className="px-3.5 py-1.5 bg-[#3D6338] text-white text-xs font-medium rounded-full sm:hidden"
+              className="px-3.5 py-1.5 bg-[#3D6338] hover:bg-[#2F4E2B] text-white text-xs font-semibold rounded-full shadow-sm sm:hidden flex items-center gap-1 cursor-pointer"
             >
-              Free Trial
+              <Calendar className="w-3 h-3 text-[#D8E8D4]" />
+              <span>Free Trial</span>
             </button>
 
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#1E1D1B] hover:text-[#3D6338] focus:outline-none cursor-pointer rounded-lg bg-[#EFEDE7]"
-              aria-label="Toggle navigation menu"
+              onClick={() => setMobileDrawerOpen(true)}
+              className="p-2.5 text-[#1E1D1B] hover:text-[#3D6338] bg-white/80 hover:bg-white border border-[#D9D7D0] rounded-2xl shadow-xs cursor-pointer transition active:scale-95 flex items-center justify-center"
+              aria-label="Open Navigation Drawer"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Menu className="w-5 h-5 text-[#1E1D1B]" />
             </button>
           </div>
         </div>
-
-        {/* Mobile Slide-down Drawer */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#F7F5F0] border-b border-[#D9D7D0] px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top duration-200">
-            <div className="flex flex-col gap-3">
-              <div className="p-3 bg-[#D8E8D4]/40 rounded-xl flex items-center justify-between border border-[#B5CAB0]/40">
-                <div className="text-xs text-[#3D6338] font-medium">
-                  🌟 1st Trial Class is 100% Free
-                </div>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenTrialModal();
-                  }}
-                  className="px-3 py-1 bg-[#3D6338] text-white text-xs rounded-full font-medium"
-                >
-                  Claim Spot
-                </button>
-              </div>
-
-              <button
-                onClick={() => scrollToSection('about')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                About Merrick Studio
-              </button>
-              <button
-                onClick={() => scrollToSection('classes')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Explore Dance Classes
-              </button>
-              <button
-                onClick={() => scrollToSection('schedule')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7] flex items-center justify-between"
-              >
-                <span>Weekly Timetable</span>
-                <span className="text-xs bg-[#D8E8D4] text-[#3D6338] px-2 py-0.5 rounded-full font-semibold">
-                  Live Slots
-                </span>
-              </button>
-              <button
-                onClick={() => scrollToSection('instructors')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Faculty &amp; Choreographers
-              </button>
-              <button
-                onClick={() => scrollToSection('pricing')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Fee Calculator &amp; Packages
-              </button>
-              <button
-                onClick={() => scrollToSection('workshops')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Upcoming Workshops
-              </button>
-              <button
-                onClick={() => scrollToSection('testimonials')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Student Reviews &amp; Stories
-              </button>
-              <button
-                onClick={() => scrollToSection('faq')}
-                className="text-left py-2 text-sm font-medium text-[#2C2B29] border-b border-[#EFEDE7]"
-              >
-                Frequently Asked Questions &amp; Inquiry
-              </button>
-
-              <div className="pt-2 flex flex-col gap-2">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenQuiz();
-                  }}
-                  className="w-full py-2.5 bg-[#EFEDE7] text-[#3D6338] border border-[#B5CAB0] rounded-xl text-xs font-semibold flex items-center justify-center gap-2"
-                >
-                  <Sparkles className="w-4 h-4 text-[#7A9E74]" />
-                  Take 30-Sec "Find Your Dance Match" Quiz
-                </button>
-
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  <a
-                    href={`https://wa.me/${generalInfo.whatsapp}?text=Hi%20Merrick%20Dance%20Studio%2C%20I%20would%20like%20to%20inquire%20about%20classes`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="py-2.5 bg-[#25D366] text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 shadow-sm"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    WhatsApp
-                  </a>
-                  <a
-                    href={`tel:${generalInfo.phone}`}
-                    className="py-2.5 bg-[#1E1D1B] text-white rounded-xl text-xs font-medium flex items-center justify-center gap-1.5"
-                  >
-                    <Phone className="w-4 h-4" />
-                    Call Studio
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
+
+      {/* Slide-out Mobile Navigation Drawer */}
+      <MobileDrawerMenu
+        isOpen={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        onOpenTrialModal={() => onOpenTrialModal()}
+        onOpenQuiz={onOpenQuiz}
+        onOpenAdvisor={onOpenAdvisor}
+      />
     </>
   );
 };

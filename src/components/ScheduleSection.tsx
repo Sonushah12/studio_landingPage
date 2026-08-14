@@ -12,7 +12,13 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onReserveSlot 
   const [selectedDay, setSelectedDay] = useState<string>('Monday');
   const [selectedStudio, setSelectedStudio] = useState<string>('all');
   const { data } = useStudioData();
+  const { generalInfo } = data;
   const scheduleSlots = data.scheduleSlots || [];
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -42,7 +48,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onReserveSlot 
                 Class Schedule &amp; Timings
               </h2>
               <p className="text-[#5A5854] text-sm mt-2 max-w-xl">
-                Hanshoura Road, Ahmedabad campus. Select any day below to view morning and evening batch availability.
+                {currentAddress} campus. Select any day below to view morning and evening batch availability.
               </p>
             </div>
 

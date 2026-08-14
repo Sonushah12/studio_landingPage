@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Award, Quote, Star, ChevronRight, Zap, Flame } from 'lucide-react';
 import { Instructor } from '../types';
 import { ScrollReveal } from './ScrollReveal';
+import { SafeImage } from './SafeImage';
 import { useStudioData } from '../context/StudioDataContext';
 
 interface InstructorsSectionProps {
@@ -10,9 +11,16 @@ interface InstructorsSectionProps {
 
 export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWithInstructor }) => {
   const { data } = useStudioData();
+  const { generalInfo } = data;
   const instructorsList = data.instructors || [];
   const [selectedInstructor, setSelectedInstructor] = useState<Instructor>(instructorsList[0]);
   const [viewMode, setViewMode] = useState<'portrait' | 'action'>('portrait');
+
+  const currentAddress =
+    generalInfo.address ||
+    generalInfo.fullAddress ||
+    'Hanshoura Road, Ahmedabad, Gujarat';
+  const shortAddress = currentAddress.split(',')[0] || 'Hanshoura Road';
 
   useEffect(() => {
     if (instructorsList.length > 0) {
@@ -34,10 +42,10 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
               <span>Master Choreographers &amp; Faculty</span>
             </div>
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-[#1E1D1B] tracking-tight">
-              Learn from Ahmedabad's Finest Choreographers
+              Learn from {generalInfo.city || 'Ahmedabad'}'s Finest Choreographers
             </h2>
             <p className="text-[#5A5854] text-sm sm:text-base mt-3">
-              Our master choreographers bring over 19 combined years of professional experience across Bollywood cinema, street battles, Latin partnering, and stage productions on Hanshoura Road.
+              Our master choreographers bring over 19 combined years of professional experience across Bollywood cinema, street battles, Latin partnering, and stage productions at our {shortAddress} studio.
             </p>
           </div>
         </ScrollReveal>
@@ -67,10 +75,9 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
                     <div className="flex items-center gap-4">
                       {/* Instructor Photo Avatar */}
                       <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-md flex-shrink-0 bg-[#2C2B29]">
-                        <img
+                        <SafeImage
                           src={instructor.imageUrl}
                           alt={instructor.name}
-                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         {isSelected && (
@@ -132,10 +139,9 @@ export const InstructorsSection: React.FC<InstructorsSectionProps> = ({ onBookWi
               <div className="bg-white rounded-3xl border border-[#D9D7D0] shadow-xl overflow-hidden">
                 {/* Visual Photo Header & Switcher */}
                 <div className="relative aspect-[16/9] sm:aspect-[21/9] bg-[#1E1D1B] overflow-hidden group">
-                  <img
+                  <SafeImage
                     src={viewMode === 'portrait' ? selectedInstructor.imageUrl : selectedInstructor.actionPhotoUrl}
                     alt={selectedInstructor.name}
-                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-center transition-all duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
